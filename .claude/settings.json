@@ -1,0 +1,43 @@
+{
+  "teammateMode": "auto",
+  "env": {
+    "CONTEXT_COMPACT_THRESHOLD": "75",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "EVAL_NUM_WORKERS": "10",
+    "EVAL_TIMEOUT": "30",
+    "EVAL_RUNS_PER_QUERY": "3",
+    "EVAL_TRIGGER_THRESHOLD": "0.5",
+    "EVAL_HOLDOUT_RATIO": "0.4"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE '^git (commit|push)'; then echo '=== Staged files ===' && git diff --cached --name-only; fi"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(./secrets/**)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)"
+    ],
+    "allow": [
+      "Read(src/**)",
+      "Read(.claude/**)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ]
+  }
+}
