@@ -3,12 +3,12 @@ repos:
     hooks:
       - id: prettier
         name: Prettier
-        entry: npm run format
+        entry: ./node_modules/.bin/prettier --write .
         language: system
         pass_filenames: false
 
       - id: eslint
         name: ESLint
-        entry: npm run lint
+        entry: ./node_modules/.bin/eslint .
         language: system
         pass_filenames: false
