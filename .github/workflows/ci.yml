@@ -10,10 +10,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
+      # node_modules is required so Node.js can resolve imports in eslint.config.mjs
+      - run: npm ci
       - run: pip install pre-commit
       - run: pre-commit run --all-files
 
