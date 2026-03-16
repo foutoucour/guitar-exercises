@@ -12,7 +12,8 @@
       "Bash(ls:*)",
       "Bash(npm ci:*)",
       "Bash(node:*)",
-      "Bash(npm show:*)"
+      "Bash(npm show:*)",
+      "Bash(wait:*)"
     ]
   }
 }
