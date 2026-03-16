@@ -15,8 +15,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files
       - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
       - run: npm test
       - run: npm run build

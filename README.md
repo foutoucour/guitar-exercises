@@ -12,8 +12,25 @@ npm run dev
 The app runs at `http://localhost:5173`.
 
 ```bash
-npm test        # run unit tests
-npm run build   # production build (output in dist/)
+npm test          # run unit tests
+npm run build     # production build (output in dist/)
+npm run lint      # ESLint
+npm run format    # Prettier (auto-fix)
+```
+
+## Pre-commit hooks
+
+The repo uses [pre-commit](https://pre-commit.com) to run Prettier and ESLint before every commit.
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After that, Prettier and ESLint run automatically on `git commit`. To run them manually on all files:
+
+```bash
+pre-commit run --all-files
 ```
 
 ## Deploy to GitHub Pages
