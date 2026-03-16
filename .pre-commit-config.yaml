@@ -1,14 +1,18 @@
 repos:
-  - repo: local
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
     hooks:
       - id: prettier
-        name: Prettier
-        entry: ./node_modules/.bin/prettier --write .
-        language: system
-        pass_filenames: false
 
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.39.1
+    hooks:
       - id: eslint
-        name: ESLint
-        entry: ./node_modules/.bin/eslint .
-        language: system
-        pass_filenames: false
+        types_or: [javascript, ts, vue]
+        additional_dependencies:
+          - eslint@^9.0.0
+          - '@eslint/js@^9.0.0'
+          - eslint-config-prettier@^9.0.0
+          - eslint-plugin-vue@^9.0.0
+          - typescript@^5.3.0
+          - typescript-eslint@^8.0.0
