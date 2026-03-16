@@ -2,10 +2,10 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [vue()],
-  base: process.env.NODE_ENV === 'production' ? '/guitar-exercises/' : '/',
+  base: mode === 'production' ? '/guitar-exercises/' : '/',
   test: {
     environment: 'jsdom',
   },
-})
+}))

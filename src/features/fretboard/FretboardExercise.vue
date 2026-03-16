@@ -13,9 +13,12 @@ function handleSubmit(): void {
   input.value = ''
 }
 
-watch(lastResult, (result) => {
+watch(lastResult, (result, _prev, onCleanup) => {
   if (result !== null) {
-    setTimeout(() => nextQuestion(), 1500)
+    const timeoutId = setTimeout(() => nextQuestion(), 1500)
+    onCleanup(() => {
+      clearTimeout(timeoutId)
+    })
   }
 })
 </script>
@@ -30,7 +33,9 @@ watch(lastResult, (result) => {
     <div v-if="streak > 0" class="streak">Streak: {{ streak }}</div>
 
     <form class="answer-form" @submit.prevent="handleSubmit">
+      <label for="answer-input">Answer note</label>
       <input
+        id="answer-input"
         v-model="input"
         type="text"
         placeholder="Note (e.g. A, C#)"
