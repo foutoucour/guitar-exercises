@@ -19,8 +19,8 @@ jobs:
         with:
           python-version: '3.x'
 
+      - run: npm ci
       - run: pip install pre-commit
       - run: pre-commit run --all-files
-      - run: npm ci
       - run: npm test
       - run: npm run build
