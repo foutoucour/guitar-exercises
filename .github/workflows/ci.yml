@@ -20,7 +20,7 @@ jobs:
           python-version: '3.x'
 
       # node_modules is required so Node.js can resolve imports in eslint.config.mjs
-      - run: npm ci
+      - run: npm ci --loglevel verbose
       - run: pip install pre-commit
       - run: pre-commit run --all-files
 
@@ -34,6 +34,6 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
+      - run: npm ci --loglevel verbose
+      - run: npm test --loglevel verbose
+      - run: npm run build --loglevel verbose
