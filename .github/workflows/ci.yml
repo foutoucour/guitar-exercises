@@ -5,7 +5,19 @@ on:
     branches: [main]
 
 jobs:
-  ci:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files
+
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,12 +27,6 @@ jobs:
           node-version: 20
           cache: npm
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
       - run: npm ci
-      - run: pip install pre-commit
-      - run: pre-commit run --all-files
       - run: npm test
       - run: npm run build
