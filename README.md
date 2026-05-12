@@ -45,7 +45,7 @@ string. Immediate feedback per string.
 
 ```bash
 poetry install
-poetry run uvicorn src.guitar_exercises.main:app --reload
+poetry run uvicorn guitar_exercises.main:app --reload
 ```
 
 Open <http://127.0.0.1:8000/exercises/chord-notes>.
