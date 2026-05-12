@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Guitar Exercises{% endblock %}
+{% block content %}
+<section class="home">
+  <header class="home-header">
+    <p class="exercise-eyebrow">Guitar Exercises</p>
+    <h1 class="home-title">Pick an exercise</h1>
+  </header>
+
+  <ul class="exercise-list">
+    {% for ex in exercises %}
+      <li class="exercise-card">
+        <a class="exercise-card-link" href="{{ ex.url }}">
+          <h2 class="exercise-card-title">{{ ex.name }}</h2>
+          <p class="exercise-card-desc">{{ ex.description }}</p>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

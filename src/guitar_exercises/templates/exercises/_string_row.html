@@ -1,0 +1,27 @@
+<li id="string-{{ spec.string_number }}" class="string-row string-row-{{ spec.state.value }}">
+  <span class="string-label">{{ spec.string_number }} string</span>
+  {% if spec.state.value == "muted" %}
+    <span class="string-status">muted — no note</span>
+  {% else %}
+    <form
+      class="answer-form"
+      hx-post="/exercises/chord-notes/check"
+      hx-target="#string-{{ spec.string_number }}"
+      hx-swap="outerHTML"
+    >
+      <input type="hidden" name="chord_id" value="{{ chord.id }}">
+      <input type="hidden" name="string_number" value="{{ spec.string_number }}">
+      <div class="note-chips" role="group" aria-label="Note for {{ spec.string_number }} string">
+        {% for note in notes %}
+          <button
+            type="submit"
+            name="guess"
+            value="{{ note.value }}"
+            class="note-chip"
+            {% if loop.first %}autofocus{% endif %}
+          >{{ note.value }}</button>
+        {% endfor %}
+      </div>
+    </form>
+  {% endif %}
+</li>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ chord.name }} — Name the notes{% endblock %}
+{% block content %}
+<section class="exercise">
+  <header class="exercise-header">
+    <p class="exercise-eyebrow">Name the notes</p>
+    <h1 class="chord-name">{{ chord.name }}</h1>
+  </header>
+
+  <figure class="chord-figure">
+    {{ svg | safe }}
+    <figcaption class="sr-only">{{ chord.name }} chord diagram</figcaption>
+  </figure>
+
+  <ol class="string-list">
+    {% for spec in chord.strings %}
+      {% include "exercises/_string_row.html" %}
+    {% endfor %}
+  </ol>
+
+  <a class="new-chord" href="/exercises/chord-notes">New chord</a>
+</section>
+{% endblock %}
