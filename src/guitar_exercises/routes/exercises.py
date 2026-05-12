@@ -12,11 +12,9 @@ from guitar_exercises.rendering.chord_svg import render_chord_svg
 
 router = APIRouter(prefix="/exercises", tags=["exercises"])
 
-_DEFAULT_RNG = random.Random()
-
 
 def get_rng() -> random.Random:
-    return _DEFAULT_RNG
+    return random.Random()
 
 
 def get_templates(settings: Annotated[Settings, Depends(get_settings)]) -> Jinja2Templates:
