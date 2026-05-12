@@ -18,7 +18,6 @@
             name="guess"
             value="{{ note.value }}"
             class="note-chip"
-            {% if loop.first %}autofocus{% endif %}
           >{{ note.value }}</button>
         {% endfor %}
       </div>
