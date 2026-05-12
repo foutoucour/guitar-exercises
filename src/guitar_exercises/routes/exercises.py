@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from guitar_exercises.config import Settings, get_settings
 from guitar_exercises.domain.chords import get_chord_by_id, pick_chord
-from guitar_exercises.domain.notes import CHROMATIC, Note, is_correct_guess
+from guitar_exercises.domain.notes import CHROMATIC, is_correct_guess
 from guitar_exercises.rendering.chord_svg import render_chord_svg
 
 router = APIRouter(prefix="/exercises", tags=["exercises"])
