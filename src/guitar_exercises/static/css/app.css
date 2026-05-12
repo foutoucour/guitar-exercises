@@ -1,0 +1,521 @@
+/* =========================================================
+   Material 3 system tokens — themed Black Beauty (dark)
+   ========================================================= */
+:root {
+  /* --- color roles (M3) mapped to Black Beauty -------------- */
+  --md-sys-color-primary: #e7c46a;             /* polished gold */
+  --md-sys-color-on-primary: #1a1308;
+  --md-sys-color-primary-container: #4a3a14;
+  --md-sys-color-on-primary-container: #f5e7bf;
+
+  --md-sys-color-secondary: #c9a24a;           /* aged gold */
+  --md-sys-color-on-secondary: #1a1308;
+  --md-sys-color-secondary-container: #3a2e10;
+  --md-sys-color-on-secondary-container: #f3ead2;
+
+  --md-sys-color-tertiary: #d4b88a;            /* cream binding */
+  --md-sys-color-on-tertiary: #1a1308;
+
+  --md-sys-color-error: #e08585;
+  --md-sys-color-on-error: #1a0a0a;
+  --md-sys-color-error-container: #2a1212;
+  --md-sys-color-on-error-container: #f7c8c8;
+
+  --md-sys-color-success: #b6e2a1;             /* (extension) */
+
+  --md-sys-color-background: #050505;
+  --md-sys-color-on-background: #f3ead2;
+
+  --md-sys-color-surface: #0d0d0d;             /* ebony */
+  --md-sys-color-on-surface: #f3ead2;
+  --md-sys-color-surface-variant: #1a1408;
+  --md-sys-color-on-surface-variant: #c9bd9c;
+
+  --md-sys-color-surface-container-lowest: #050505;
+  --md-sys-color-surface-container-low: #111;
+  --md-sys-color-surface-container: #161208;
+  --md-sys-color-surface-container-high: #1f1810;
+  --md-sys-color-surface-container-highest: #2a2014;
+
+  --md-sys-color-outline: #8a7e5e;
+  --md-sys-color-outline-variant: #3a3220;
+
+  --md-sys-color-inverse-surface: #f3ead2;
+  --md-sys-color-inverse-on-surface: #1a1308;
+
+  /* --- shape (M3 corner scale) ------------------------------ */
+  --md-sys-shape-corner-none: 0;
+  --md-sys-shape-corner-xs: 4px;
+  --md-sys-shape-corner-sm: 8px;
+  --md-sys-shape-corner-md: 12px;
+  --md-sys-shape-corner-lg: 16px;
+  --md-sys-shape-corner-xl: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* --- elevation (M3 dark — deeper shadows + tint) ---------- */
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  --md-sys-elevation-2:
+    0 1px 2px rgba(0, 0, 0, 0.55),
+    0 2px 6px 2px rgba(0, 0, 0, 0.35);
+  --md-sys-elevation-3:
+    0 4px 8px 3px rgba(0, 0, 0, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.55);
+  --md-sys-elevation-4:
+    0 6px 10px 4px rgba(0, 0, 0, 0.4),
+    0 2px 3px rgba(0, 0, 0, 0.55);
+  --md-sys-elevation-5:
+    0 8px 12px 6px rgba(0, 0, 0, 0.4),
+    0 4px 4px rgba(0, 0, 0, 0.55);
+
+  /* --- motion ----------------------------------------------- */
+  --md-sys-motion-duration-short: 100ms;
+  --md-sys-motion-duration-medium: 200ms;
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* --- typescale (compact for 15" laptop) ------------------- */
+  --md-sys-typescale-display-medium: 600 italic 2rem/2.4rem "Cormorant Garamond", Georgia, serif;
+  --md-sys-typescale-headline-medium: 600 italic 1.75rem/2.1rem "Cormorant Garamond", Georgia, serif;
+  --md-sys-typescale-headline-small: 600 italic 1.4rem/1.7rem "Cormorant Garamond", Georgia, serif;
+  --md-sys-typescale-title-large: 600 italic 1.25rem/1.6rem "Cormorant Garamond", Georgia, serif;
+  --md-sys-typescale-title-medium: 500 0.95rem/1.4rem "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-body-medium: 400 0.875rem/1.35rem "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-body-small: 400 0.8rem/1.25rem "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-label-large: 500 0.8rem/1rem "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-label-small: 600 0.65rem/1rem "Roboto", system-ui, sans-serif;
+
+  /* --- spacing (kept compact) ------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+}
+
+/* =========================================================
+   Reset + base
+   ========================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background:
+    radial-gradient(ellipse at top, #1a1308 0%, #050505 55%, #000 100%),
+    var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  font: var(--md-sys-typescale-body-medium);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+/* ---------- topbar (global) -------------------------------- */
+.topbar {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4) 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.topbar-brand {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem 0.25rem 0.3rem;
+  margin-bottom: -1px;
+  border-radius: var(--md-sys-shape-corner-sm);
+  color: var(--md-sys-color-secondary);
+  text-decoration: none;
+  font: var(--md-sys-typescale-label-large);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.topbar-brand::before {
+  content: "♪";
+  font-family: var(--md-sys-typescale-headline-small);
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--md-sys-color-primary);
+  transform: translateY(-1px);
+}
+
+.topbar-brand:hover { color: var(--md-sys-color-primary); }
+.topbar-brand:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================================================
+   M3 state layer — apply via .md-state on interactive surfaces
+   ========================================================= */
+.md-state {
+  position: relative;
+  isolation: isolate;
+}
+.md-state::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+.md-state:hover::after { opacity: 0.08; }
+.md-state:focus-visible::after { opacity: 0.12; }
+.md-state:active::after { opacity: 0.12; }
+.md-state > * { position: relative; z-index: 1; }
+
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   Typography helpers
+   ========================================================= */
+.exercise-eyebrow {
+  font: var(--md-sys-typescale-label-small);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--md-sys-color-secondary);
+  margin: 0 0 var(--space-2);
+}
+
+.chord-name,
+.home-title {
+  font: var(--md-sys-typescale-headline-medium);
+  margin: 0;
+  color: var(--md-sys-color-primary);
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.exercise-card-title {
+  font: var(--md-sys-typescale-title-large);
+  margin: 0 0 var(--space-1);
+  color: var(--md-sys-color-primary);
+}
+
+/* =========================================================
+   Exercise (chord-notes) page — 2-col on wide screens
+   ========================================================= */
+.exercise {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+.exercise-header {
+  text-align: center;
+  margin: 0;
+}
+
+.chord-figure {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.chord-diagram {
+  width: 170px;
+  max-width: 100%;
+  height: auto;
+  color: var(--md-sys-color-on-surface);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.chord-marker {
+  font: var(--md-sys-typescale-label-large);
+  font-weight: 600;
+  fill: var(--md-sys-color-on-surface);
+}
+
+.chord-finger {
+  font: var(--md-sys-typescale-label-small);
+  fill: var(--md-sys-color-on-surface-variant);
+}
+
+/* ---------- string list (M3 outlined cards) ---------------- */
+.string-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.string-row {
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-md);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.string-label {
+  font: var(--md-sys-typescale-title-medium);
+  color: var(--md-sys-color-secondary);
+  letter-spacing: 0.04em;
+}
+
+.string-row-muted {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.string-status {
+  color: var(--md-sys-color-on-surface-variant);
+  font-style: italic;
+}
+
+.string-row-muted {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--md-sys-color-outline);
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.string-row-correct {
+  border-color: var(--md-sys-color-success);
+  background: linear-gradient(180deg, #1a2715 0%, #0e1a0a 100%);
+}
+
+.string-row-incorrect {
+  border-color: var(--md-sys-color-error);
+  background: var(--md-sys-color-error-container);
+}
+
+.answer-feedback { font-weight: 600; }
+.string-row-correct .answer-feedback { color: var(--md-sys-color-success); }
+.string-row-incorrect .answer-feedback { color: var(--md-sys-color-error); }
+
+/* =========================================================
+   M3 form controls
+   ========================================================= */
+.answer-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex: 1 1 100%;
+  margin: 0;
+}
+
+/* M3 chip group — button-backed note picker (keyboard: Tab + Enter) */
+.note-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+}
+
+.note-chip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.9rem;
+  height: 1.75rem;
+  padding: 0 0.55rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1px solid var(--md-sys-color-outline);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-primary);
+  font: var(--md-sys-typescale-label-large);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    background var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.note-chip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-primary);
+  opacity: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.note-chip:hover { border-color: var(--md-sys-color-primary); }
+.note-chip:hover::after { opacity: 0.08; }
+.note-chip:active::after { opacity: 0.12; }
+
+.note-chip:focus-visible {
+  outline: none;
+  border-color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: 0 0 0 3px rgba(231, 196, 106, 0.35);
+}
+.note-chip:focus-visible::after { opacity: 0; }
+
+/* M3 outlined button — "New chord" */
+.new-chord {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  padding: 0 1.25rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1px solid var(--md-sys-color-outline);
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font: var(--md-sys-typescale-label-large);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+.new-chord::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-primary);
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+}
+.new-chord:hover { border-color: var(--md-sys-color-primary); }
+.new-chord:hover::after { opacity: 0.08; }
+.new-chord:focus-visible::after { opacity: 0.12; }
+.new-chord:active::after { opacity: 0.12; }
+
+/* =========================================================
+   Home page — M3 elevated cards
+   ========================================================= */
+.home-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.exercise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* M3 Elevated Card */
+.exercise-card {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-md);
+  box-shadow: var(--md-sys-elevation-1);
+  transition:
+    box-shadow var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
+}
+
+.exercise-card:hover {
+  box-shadow: var(--md-sys-elevation-3);
+  transform: translateY(-1px);
+}
+
+.exercise-card-link {
+  display: block;
+  padding: var(--space-4) var(--space-5);
+  color: inherit;
+  text-decoration: none;
+  border-radius: inherit;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.exercise-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-primary);
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.exercise-card-link:hover::after { opacity: 0.08; }
+.exercise-card-link:focus-visible::after { opacity: 0.12; }
+.exercise-card-link:active::after { opacity: 0.12; }
+.exercise-card-link > * { position: relative; z-index: 1; }
+
+.exercise-card-desc {
+  margin: 0;
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+@media (min-width: 720px) {
+  .page { padding: var(--space-6) var(--space-5); }
+
+  .exercise {
+    grid-template-columns: minmax(220px, 280px) 1fr;
+    column-gap: var(--space-6);
+    row-gap: var(--space-4);
+    align-items: start;
+  }
+  .exercise-header { grid-column: 1; grid-row: 1; }
+  .chord-figure { grid-column: 1; grid-row: 2; margin: 0 auto; }
+  .string-list { grid-column: 2; grid-row: 1 / span 2; }
+  .new-chord { grid-column: 1 / -1; grid-row: 3; justify-self: center; }
+
+  .chord-diagram { width: 200px; }
+}
+
+@media (min-width: 720px) {
+  .exercise-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+}

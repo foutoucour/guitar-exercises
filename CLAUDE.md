@@ -12,6 +12,12 @@
 
 **No JavaScript.** Frontend TBD — likely HTMX + Jinja2 or a pure-Python UI framework.
 
+## Target viewport
+
+- Primary target: 15" laptop (~1440×900 viewport, content area ~1200px wide).
+- Optimise UI density for this size: prefer multi-column layouts that use horizontal space; avoid oversized typography, padding, or vertical scrolling that wastes the width.
+- The dev/run command is `make run` (no-reload) or `make dev` (reload). After every code change, run tests via `make test` or `poetry run pytest`.
+
 ## Python conventions
 
 - Use poetry to manage dependencies; pin with `">=x.y.z,<x+1"` version ranges
