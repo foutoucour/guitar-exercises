@@ -40,7 +40,6 @@ async def home(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
 ) -> HTMLResponse:
     return templates.TemplateResponse(
-        request,
         "home.html",
-        {"exercises": EXERCISES},
+        {"request": request, "exercises": EXERCISES},
     )
