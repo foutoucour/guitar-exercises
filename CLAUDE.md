@@ -1,86 +1,47 @@
-# python code
-## libraries
+# Guitar Exercises — Project Instructions
 
-* use poetry to manage the dependencies
-* use pydantic for the structured data
-* use loguru for logs
-* use f-strings in logger calls instead of extra kwargs (e.g. `logger.info(f"Job created {job_id}")` not `logger.info("Job created", job_id=job_id)`)
-* use pytest for tests
-* use pytest-recording to reduce network footprints during the tests
-* use async as most as possible
-* don't use global variables, use dependency injection instead
-* use type hints for better readability and maintainability
-* keep the functions short. If a function is too long, break it into smaller functions.
-* when adding a dependency, use the pattern ">=x.y.z,<x+1" to allow for patch and minor updates but prevent breaking changes
-* use hvac to communicate with Vault
-* use msal to communicate with the Autodesk Authentification
-
-
-# Frontend code
 ## Stack
 
-* use Vue.js as the frontend framework
-* use TypeScript for all frontend code — no plain `.js` files
-* use Vite as the build tool
+- Python 3.14+
+- FastAPI / Starlette
+- Pydantic (structured data and request/response models)
+- Loguru (logging)
+- Pytest + pytest-recording (tests)
+- Poetry (dependency management)
+- Docker Compose (dev environment)
+
+**No JavaScript.** Frontend TBD — likely HTMX + Jinja2 or a pure-Python UI framework.
+
+## Python conventions
+
+- Use poetry to manage dependencies; pin with `">=x.y.z,<x+1"` version ranges
+- Use Pydantic for all structured data (models, request/response schemas)
+- Use loguru for all logging; use f-strings in log calls: `logger.info(f"Session {session_id} started")`
+- Use async everywhere it makes sense (route handlers, I/O-bound operations)
+- Use type hints throughout
+- No global variables — use FastAPI dependency injection
+- Keep functions short; split if a function grows too long
 
 ## Testing
 
-* use Vitest for unit tests
-* use Vue Test Utils for component tests
-* place test files next to the source file they test (e.g. `MyComponent.spec.ts`)
-* run tests with `npm test` (from `frontend/` directory)
+- `poetry run pytest` — run from project root
+- Use pytest-recording to avoid real network calls in tests
+- Use FastAPI TestClient for API integration tests
+- TDD: write a failing test first, then make it pass
 
-## Modularity
+## Always run tests
 
-* organize code into feature-based modules (e.g. `features/exercises/`, `features/auth/`)
-* each module owns its components, composables, types, and tests
-* share only truly reusable code in a `shared/` directory
-* use Vue composables (`use*.ts`) to extract and reuse stateful logic
-* keep components under ~150 lines; split larger components into smaller ones
+After every code change:
 
+```bash
+poetry run pytest
+```
 
-# Development Principles
+## Build & Test commands
 
-## KISS (Keep It Simple, Stupid)
-
-    Simplest architecture that meets requirements
-    No unnecessary services or layers
-    Start with in-memory caching, add Redis only if needed
-
-## No Over-Engineering
-
-    Do not add components that are not justified by the problem
-    Defer optimization until measurements show it's needed
-
-## Separation of Concerns
-
-    Clear boundaries between components and layers:
-        Vault client (token retrieval)
-        Jenkins API client (log retrieval)
-        Log processor (preprocessing/filtering)
-        Analyzer (LLM interaction)
-        API layer (web service endpoints)
-
-## Trade-off Awareness
-
-    Document why decisions were made
-    What alternatives were considered
-    What constraints influenced the choice
-
-## SOLID Principles
-
-    Single Responsibility: each module has one reason to change
-    Open/Closed: open for extension, closed for modification
-    Dependency Inversion: depend on abstractions, not concretions
-
-## Test Driven Development (TDD)
-
-    Red/Green approach: write failing test → make it pass → refactor
-    Use pytest-recording to reduce network footprints during tests
-
-## Always Run Tests
-
-After every code change, always run **both** test suites before considering the task done:
-* Backend: `poetry run pytest` (from project root)
-* Frontend: `npm test` (from `frontend/` directory)
-* Build the frontend with `npm run build` (from `frontend/` directory) to catch type errors
+```bash
+poetry install          # install dependencies
+poetry run uvicorn src.guitar_exercises.main:app --reload  # dev server
+poetry run pytest       # tests
+docker compose up       # full dev environment
+```
