@@ -1,7 +1,7 @@
 import random
 import re
 from enum import StrEnum
-from pathlib import Path
+from importlib import resources
 from typing import Annotated, Self
 
 import yaml
@@ -103,30 +103,12 @@ def _build_chord(
     return Chord(id=chord_id, name=name, strings=tuple(specs))
 
 
-def _find_repo_root(start: Path) -> Path:
-    """Walk upward from ``start`` until a directory containing ``pyproject.toml`` is found.
-
-    Used instead of a hard-coded ``parents[N]`` index so the chord catalog path stays
-    correct if the package is moved or re-nested. Raises ``FileNotFoundError`` if no
-    ancestor contains a ``pyproject.toml`` — surfaces misconfiguration loudly at
-    import time rather than silently resolving to the wrong location.
-    """
-    for candidate in (start, *start.parents):
-        if (candidate / "pyproject.toml").is_file():
-            return candidate
-    raise FileNotFoundError(
-        f"could not locate a pyproject.toml ancestor starting from {start}; "
-        "the chords.yaml location cannot be resolved"
+def _load_chords_from_yaml() -> tuple[Chord, ...]:
+    raw = yaml.safe_load(
+        resources.files(__package__).joinpath("chords.yaml").read_text(encoding="utf-8")
     )
-
-
-_CHORDS_FILE = _find_repo_root(Path(__file__).resolve()) / "config" / "chords.yaml"
-
-
-def _load_chords_from_yaml(path: Path) -> tuple[Chord, ...]:
-    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or "chords" not in raw:
-        raise ValueError(f"{path}: expected a top-level 'chords' list")
+        raise ValueError("chords.yaml: expected a top-level 'chords' list")
     return tuple(
         _build_chord(
             chord_id=entry["id"],
@@ -138,7 +120,7 @@ def _load_chords_from_yaml(path: Path) -> tuple[Chord, ...]:
     )
 
 
-CHORDS: tuple[Chord, ...] = _load_chords_from_yaml(_CHORDS_FILE)
+CHORDS: tuple[Chord, ...] = _load_chords_from_yaml()
 
 _CHORDS_BY_ID: dict[str, Chord] = {chord.id: chord for chord in CHORDS}
 

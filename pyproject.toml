@@ -17,6 +17,7 @@ dependencies = [
 
 [tool.poetry]
 packages = [{ include = "guitar_exercises", from = "src" }]
+include = ["src/guitar_exercises/domain/chords.yaml"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.3.0,<9"

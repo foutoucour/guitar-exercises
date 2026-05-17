@@ -3,6 +3,8 @@ import pytest
 from guitar_exercises.domain.chords import (
     CHORDS,
     Chord,
+    StringSpec,
+    StringState,
     get_chord_by_id,
     is_correct_chord_guess,
 )
@@ -98,15 +100,15 @@ def test_every_canonical_name_matches_itself() -> None:
 def test_unicode_sharp_normalises_to_ascii_hash() -> None:
     # Even though we have no sharp roots in CHORDS today, the matcher must
     # treat ♯ and # as equivalent so future entries (e.g. F#m) work.
-    # Exercised through the public API with a synthetic Chord — the shape
-    # is irrelevant; only `name` participates in the comparison.
-    from guitar_exercises.domain.chords import _build_chord
-
-    fsharp_minor = _build_chord(
-        chord_id="f_sharp_minor_synth",
+    # Exercised through the public API with a synthetic Chord — only `name`
+    # participates in the comparison.
+    fsharp_minor = Chord(
+        id="f_sharp_minor_synth",
         name="F#m",
-        frets=[None, None, None, None, None, None],
-        fingers=[None, None, None, None, None, None],
+        strings=tuple(
+            StringSpec(string_number=string_number, state=StringState.MUTED)
+            for string_number in [6, 5, 4, 3, 2, 1]
+        ),
     )
     assert is_correct_chord_guess("F♯m", fsharp_minor)
     assert is_correct_chord_guess("F#m", fsharp_minor)
