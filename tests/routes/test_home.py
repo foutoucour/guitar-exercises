@@ -16,3 +16,11 @@ def test_home_renders_with_exercise_card_class(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert "exercise-card" in response.text
+
+
+def test_home_footer_renders_version(client: TestClient) -> None:
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert 'class="sitefoot"' in response.text
+    assert 'class="sitefoot-version"' in response.text

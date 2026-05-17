@@ -13,6 +13,7 @@ from guitar_exercises.domain.chords import (
 )
 from guitar_exercises.domain.notes import CHROMATIC, is_correct_guess
 from guitar_exercises.rendering.chord_svg import render_chord_svg
+from guitar_exercises.version import get_version
 
 router = APIRouter(prefix="/exercises", tags=["exercises"])
 
@@ -22,7 +23,9 @@ def get_rng() -> random.Random:
 
 
 def get_templates(settings: Annotated[Settings, Depends(get_settings)]) -> Jinja2Templates:
-    return Jinja2Templates(directory=settings.templates_dir)
+    templates = Jinja2Templates(directory=settings.templates_dir)
+    templates.env.globals["app_version"] = get_version()
+    return templates
 
 
 @router.get("/chord-notes", response_class=HTMLResponse)

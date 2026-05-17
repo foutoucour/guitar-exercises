@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 from guitar_exercises.config import Settings, get_settings
+from guitar_exercises.version import get_version
 
 router = APIRouter()
 
@@ -46,7 +47,9 @@ EXERCISES: list[ExerciseListing] = [
 
 
 def get_templates(settings: Annotated[Settings, Depends(get_settings)]) -> Jinja2Templates:
-    return Jinja2Templates(directory=settings.templates_dir)
+    templates = Jinja2Templates(directory=settings.templates_dir)
+    templates.env.globals["app_version"] = get_version()
+    return templates
 
 
 @router.get("/", response_class=HTMLResponse)
