@@ -431,6 +431,108 @@ body {
 .new-chord:active::after { opacity: 0.12; }
 
 /* =========================================================
+   Chord-name exercise — free-text guess form
+   ========================================================= */
+
+/* Single-column centered stack — overrides the chord-notes 2-col grid so the
+   diagram, input, and "New chord" link sit in a tight vertical column. */
+.exercise--guess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.exercise--guess .chord-figure { margin: 0; }
+
+.exercise--guess .chord-guess {
+  /* Push the input down so it sits clearly below the diagram, not next to it. */
+  margin-top: var(--space-3);
+}
+
+/* "New chord" sits right under the input — tight gap, not the section's default. */
+.exercise--guess > .new-chord { margin-top: calc(var(--space-2) * -1); }
+
+.chord-guess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.chord-guess-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.chord-guess-input {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 2.5rem;
+  padding: 0 var(--space-4);
+  min-width: 16rem;
+  border-radius: var(--md-sys-shape-corner-sm);
+  border: 1px solid var(--md-sys-color-outline);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-title-medium);
+  font-family: "Roboto", system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  box-shadow: var(--md-sys-elevation-1);
+  transition:
+    border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.chord-guess-input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.chord-guess-input:hover { border-color: var(--md-sys-color-primary); }
+
+.chord-guess-input:focus,
+.chord-guess-input:focus-visible {
+  outline: none;
+  border-color: var(--md-sys-color-primary);
+  box-shadow:
+    var(--md-sys-elevation-1),
+    0 0 0 3px rgba(231, 196, 106, 0.35);
+}
+
+.chord-guess-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--md-sys-shape-corner-md);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container);
+  box-shadow: var(--md-sys-elevation-1);
+  min-width: 16rem;
+}
+
+.chord-guess-feedback.correct {
+  border-color: var(--md-sys-color-success);
+  background: linear-gradient(180deg, #1a2715 0%, #0e1a0a 100%);
+}
+
+.chord-guess-feedback.correct .answer-feedback { color: var(--md-sys-color-success); }
+
+.chord-guess-feedback.incorrect {
+  border-color: var(--md-sys-color-error);
+  background: var(--md-sys-color-error-container);
+}
+
+.chord-guess-feedback.incorrect .answer-feedback { color: var(--md-sys-color-error); }
+
+/* =========================================================
    Home page — M3 elevated cards
    ========================================================= */
 .home-header {
@@ -465,7 +567,9 @@ body {
 }
 
 .exercise-card-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
   padding: var(--space-4) var(--space-5);
   color: inherit;
   text-decoration: none;
@@ -474,6 +578,24 @@ body {
   isolation: isolate;
   overflow: hidden;
 }
+
+.exercise-card-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  font-size: 1.6rem;
+  line-height: 1;
+  box-shadow: var(--md-sys-elevation-1);
+  user-select: none;
+}
+
+.exercise-card-body { flex: 1 1 auto; min-width: 0; }
 .exercise-card-link::after {
   content: "";
   position: absolute;
