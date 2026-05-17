@@ -96,8 +96,20 @@ def test_every_canonical_name_matches_itself() -> None:
 
 
 def test_unicode_sharp_normalises_to_ascii_hash() -> None:
-    # Even though we have no sharp roots in CHORDS today, the normaliser
-    # must treat ♯ and # as equivalent so future entries (e.g. F#m) work.
-    from guitar_exercises.domain.chords import _normalize_chord_name
+    # Even though we have no sharp roots in CHORDS today, the matcher must
+    # treat ♯ and # as equivalent so future entries (e.g. F#m) work.
+    # Exercised through the public API with a synthetic Chord — the shape
+    # is irrelevant; only `name` participates in the comparison.
+    from guitar_exercises.domain.chords import _build_chord
 
-    assert _normalize_chord_name("F♯m") == _normalize_chord_name("F#m") == "f#minor"
+    fsharp_minor = _build_chord(
+        chord_id="f_sharp_minor_synth",
+        name="F#m",
+        frets=[None, None, None, None, None, None],
+        fingers=[None, None, None, None, None, None],
+    )
+    assert is_correct_chord_guess("F♯m", fsharp_minor)
+    assert is_correct_chord_guess("F#m", fsharp_minor)
+    assert is_correct_chord_guess("F# minor", fsharp_minor)
+    assert is_correct_chord_guess("F♯ minor", fsharp_minor)
+    assert not is_correct_chord_guess("Fm", fsharp_minor)

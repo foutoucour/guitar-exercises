@@ -103,7 +103,24 @@ def _build_chord(
     return Chord(id=chord_id, name=name, strings=tuple(specs))
 
 
-_CHORDS_FILE = Path(__file__).resolve().parents[3] / "config" / "chords.yaml"
+def _find_repo_root(start: Path) -> Path:
+    """Walk upward from ``start`` until a directory containing ``pyproject.toml`` is found.
+
+    Used instead of a hard-coded ``parents[N]`` index so the chord catalog path stays
+    correct if the package is moved or re-nested. Raises ``FileNotFoundError`` if no
+    ancestor contains a ``pyproject.toml`` — surfaces misconfiguration loudly at
+    import time rather than silently resolving to the wrong location.
+    """
+    for candidate in (start, *start.parents):
+        if (candidate / "pyproject.toml").is_file():
+            return candidate
+    raise FileNotFoundError(
+        f"could not locate a pyproject.toml ancestor starting from {start}; "
+        "the chords.yaml location cannot be resolved"
+    )
+
+
+_CHORDS_FILE = _find_repo_root(Path(__file__).resolve()) / "config" / "chords.yaml"
 
 
 def _load_chords_from_yaml(path: Path) -> tuple[Chord, ...]:

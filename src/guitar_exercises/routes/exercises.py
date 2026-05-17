@@ -95,13 +95,17 @@ async def chord_name_check(
     if chord is None:
         raise HTTPException(status_code=404, detail="chord not found")
 
-    correct = is_correct_chord_guess(guess, chord)
+    cleaned_guess = guess.strip()
+    if not cleaned_guess:
+        raise HTTPException(status_code=422, detail="guess must not be blank")
+
+    correct = is_correct_chord_guess(cleaned_guess, chord)
     return templates.TemplateResponse(
         request,
         "exercises/_chord_name_feedback.html",
         {
             "chord_id": chord_id,
-            "guess": guess,
+            "guess": cleaned_guess,
             "expected_name": chord.name,
             "correct": correct,
         },
