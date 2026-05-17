@@ -1,0 +1,128 @@
+# Chord library — single source of truth for every exercise.
+#
+# Format:
+#   - id:      stable slug used in URLs and forms (snake_case). Never change once shipped.
+#   - name:    canonical display name (e.g. "A major", "A minor 7"). Matching is alias-aware
+#              so users can type "Am", "A min", "Am7", "Amaj7", etc.
+#   - frets:   6 entries, index 0 = string 6 (low E), index 5 = string 1 (high E).
+#              null = muted, 0 = open, >=1 = fretted (a matching finger is required).
+#   - fingers: 6 entries, same order as frets.
+#              null when muted or open; 1..4 when fretted.
+#
+# To add a chord: append a new entry. Both exercises pick it up on next restart.
+
+chords:
+  - id: a_major
+    name: A major
+    frets:   [null, 0, 2, 2, 2, 0]
+    fingers: [null, null, 1, 2, 3, null]
+
+  - id: a_minor
+    name: A minor
+    frets:   [null, 0, 2, 2, 1, 0]
+    fingers: [null, null, 2, 3, 1, null]
+
+  - id: a_7
+    name: A7
+    frets:   [null, 0, 2, 0, 2, 0]
+    fingers: [null, null, 1, null, 2, null]
+
+  - id: a_maj7
+    name: A major 7
+    frets:   [null, 0, 2, 1, 2, 0]
+    fingers: [null, null, 2, 1, 3, null]
+
+  - id: a_min7
+    name: A minor 7
+    frets:   [null, 0, 2, 0, 1, 0]
+    fingers: [null, null, 2, null, 1, null]
+
+  - id: b_7
+    name: B7
+    frets:   [null, 2, 1, 2, 0, 2]
+    fingers: [null, 2, 1, 3, null, 4]
+
+  - id: c_major
+    name: C major
+    frets:   [null, 3, 2, 0, 1, 0]
+    fingers: [null, 3, 2, null, 1, null]
+
+  - id: c_7
+    name: C7
+    frets:   [null, 3, 2, 3, 1, 0]
+    fingers: [null, 3, 2, 4, 1, null]
+
+  - id: c_maj7
+    name: C major 7
+    frets:   [null, 3, 2, 0, 0, 0]
+    fingers: [null, 3, 2, null, null, null]
+
+  - id: d_major
+    name: D major
+    frets:   [null, null, 0, 2, 3, 2]
+    fingers: [null, null, null, 1, 3, 2]
+
+  - id: d_minor
+    name: D minor
+    frets:   [null, null, 0, 2, 3, 1]
+    fingers: [null, null, null, 2, 3, 1]
+
+  - id: d_7
+    name: D7
+    frets:   [null, null, 0, 2, 1, 2]
+    fingers: [null, null, null, 2, 1, 3]
+
+  - id: d_maj7
+    name: D major 7
+    frets:   [null, null, 0, 2, 2, 2]
+    fingers: [null, null, null, 1, 1, 1]
+
+  - id: d_min7
+    name: D minor 7
+    frets:   [null, null, 0, 2, 1, 1]
+    fingers: [null, null, null, 2, 1, 1]
+
+  - id: e_major
+    name: E major
+    frets:   [0, 2, 2, 1, 0, 0]
+    fingers: [null, 2, 3, 1, null, null]
+
+  - id: e_minor
+    name: E minor
+    frets:   [0, 2, 2, 0, 0, 0]
+    fingers: [null, 2, 3, null, null, null]
+
+  - id: e_7
+    name: E7
+    frets:   [0, 2, 0, 1, 0, 0]
+    fingers: [null, 2, null, 1, null, null]
+
+  - id: e_maj7
+    name: E major 7
+    frets:   [0, 2, 1, 1, 0, 0]
+    fingers: [null, 3, 1, 2, null, null]
+
+  - id: e_min7
+    name: E minor 7
+    frets:   [0, 2, 0, 0, 0, 0]
+    fingers: [null, 2, null, null, null, null]
+
+  - id: f_maj7
+    name: F major 7
+    frets:   [null, null, 3, 2, 1, 0]
+    fingers: [null, null, 3, 2, 1, null]
+
+  - id: g_major
+    name: G major
+    frets:   [3, 2, 0, 0, 0, 3]
+    fingers: [2, 1, null, null, null, 3]
+
+  - id: g_7
+    name: G7
+    frets:   [3, 2, 0, 0, 0, 1]
+    fingers: [3, 2, null, null, null, 1]
+
+  - id: g_maj7
+    name: G major 7
+    frets:   [3, 2, 0, 0, 0, 2]
+    fingers: [3, 2, null, null, null, 1]

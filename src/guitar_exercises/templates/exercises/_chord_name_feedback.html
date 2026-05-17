@@ -1,0 +1,8 @@
+<div class="chord-guess-feedback {{ 'correct' if correct else 'incorrect' }}" id="chord-guess">
+  {% if correct %}
+    <span class="answer-feedback">✓ Correct: {{ expected_name }}</span>
+  {% else %}
+    <span class="answer-feedback">✗ You said {{ guess }} — the chord is {{ expected_name }}</span>
+  {% endif %}
+  <a class="new-chord" href="/exercises/chord-name">New chord</a>
+</div>

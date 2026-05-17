@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Name this chord{% endblock %}
+{% block content %}
+<section class="exercise exercise--guess">
+  <header class="exercise-header">
+    <p class="exercise-eyebrow">Name this chord</p>
+    <h1 class="chord-name">What chord is this?</h1>
+  </header>
+
+  <figure class="chord-figure">
+    {{ svg | safe }}
+    <figcaption class="sr-only">Unnamed chord diagram</figcaption>
+  </figure>
+
+  <div class="chord-guess" id="chord-guess">
+    <form
+      class="chord-guess-form"
+      hx-post="/exercises/chord-name/check"
+      hx-target="#chord-guess"
+      hx-swap="innerHTML"
+    >
+      <input type="hidden" name="chord_id" value="{{ chord.id }}">
+      <label for="chord-guess-input" class="sr-only">Chord name</label>
+      <input
+        id="chord-guess-input"
+        class="chord-guess-input"
+        type="text"
+        name="guess"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        maxlength="32"
+        placeholder="e.g. A minor, Am, Amaj7"
+        autofocus
+        required
+      >
+      <button class="new-chord" type="submit">Check</button>
+    </form>
+  </div>
+
+  <a class="new-chord" href="/exercises/chord-name">New chord</a>
+</section>
+{% endblock %}

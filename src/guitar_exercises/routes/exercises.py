@@ -6,7 +6,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from guitar_exercises.config import Settings, get_settings
-from guitar_exercises.domain.chords import get_chord_by_id, pick_chord
+from guitar_exercises.domain.chords import (
+    get_chord_by_id,
+    is_correct_chord_guess,
+    pick_chord,
+)
 from guitar_exercises.domain.notes import CHROMATIC, is_correct_guess
 from guitar_exercises.rendering.chord_svg import render_chord_svg
 
@@ -60,6 +64,45 @@ async def chord_notes_check(
             "string_number": string_number,
             "guess": guess,
             "expected_note": expected.value,
+            "correct": correct,
+        },
+    )
+
+
+@router.get("/chord-name", response_class=HTMLResponse)
+async def chord_name_page(
+    request: Request,
+    rng: Annotated[random.Random, Depends(get_rng)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+) -> HTMLResponse:
+    chord = pick_chord(rng)
+    svg = render_chord_svg(chord, reveal_name=False)
+    return templates.TemplateResponse(
+        request,
+        "exercises/chord_name.html",
+        {"chord": chord, "svg": svg},
+    )
+
+
+@router.post("/chord-name/check", response_class=HTMLResponse)
+async def chord_name_check(
+    request: Request,
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    chord_id: Annotated[str, Form()],
+    guess: Annotated[str, Form(min_length=1, max_length=32)],
+) -> HTMLResponse:
+    chord = get_chord_by_id(chord_id)
+    if chord is None:
+        raise HTTPException(status_code=404, detail="chord not found")
+
+    correct = is_correct_chord_guess(guess, chord)
+    return templates.TemplateResponse(
+        request,
+        "exercises/_chord_name_feedback.html",
+        {
+            "chord_id": chord_id,
+            "guess": guess,
+            "expected_name": chord.name,
             "correct": correct,
         },
     )

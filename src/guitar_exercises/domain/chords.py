@@ -1,7 +1,10 @@
 import random
+import re
 from enum import StrEnum
+from pathlib import Path
 from typing import Annotated, Self
 
+import yaml
 from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from guitar_exercises.domain.notes import Note
@@ -100,32 +103,25 @@ def _build_chord(
     return Chord(id=chord_id, name=name, strings=tuple(specs))
 
 
-CHORDS: tuple[Chord, ...] = (
-    _build_chord("a_major", "A major", [None, 0, 2, 2, 2, 0], [None, None, 1, 2, 3, None]),
-    _build_chord("a_minor", "A minor", [None, 0, 2, 2, 1, 0], [None, None, 2, 3, 1, None]),
-    _build_chord("a_7", "A7", [None, 0, 2, 0, 2, 0], [None, None, 1, None, 2, None]),
-    _build_chord("a_maj7", "A major 7", [None, 0, 2, 1, 2, 0], [None, None, 2, 1, 3, None]),
-    _build_chord("a_min7", "A minor 7", [None, 0, 2, 0, 1, 0], [None, None, 2, None, 1, None]),
-    _build_chord("b_7", "B7", [None, 2, 1, 2, 0, 2], [None, 2, 1, 3, None, 4]),
-    _build_chord("c_major", "C major", [None, 3, 2, 0, 1, 0], [None, 3, 2, None, 1, None]),
-    _build_chord("c_7", "C7", [None, 3, 2, 3, 1, 0], [None, 3, 2, 4, 1, None]),
-    _build_chord("c_maj7", "C major 7", [None, 3, 2, 0, 0, 0], [None, 3, 2, None, None, None]),
-    _build_chord("d_major", "D major", [None, None, 0, 2, 3, 2], [None, None, None, 1, 3, 2]),
-    _build_chord("d_minor", "D minor", [None, None, 0, 2, 3, 1], [None, None, None, 2, 3, 1]),
-    _build_chord("d_7", "D7", [None, None, 0, 2, 1, 2], [None, None, None, 2, 1, 3]),
-    _build_chord("d_maj7", "D major 7", [None, None, 0, 2, 2, 2], [None, None, None, 1, 1, 1]),
-    _build_chord("d_min7", "D minor 7", [None, None, 0, 2, 1, 1], [None, None, None, 2, 1, 1]),
-    _build_chord("e_major", "E major", [0, 2, 2, 1, 0, 0], [None, 2, 3, 1, None, None]),
-    _build_chord("e_minor", "E minor", [0, 2, 2, 0, 0, 0], [None, 2, 3, None, None, None]),
-    _build_chord("e_7", "E7", [0, 2, 0, 1, 0, 0], [None, 2, None, 1, None, None]),
-    _build_chord("e_maj7", "E major 7", [0, 2, 1, 1, 0, 0], [None, 3, 1, 2, None, None]),
-    _build_chord("e_min7", "E minor 7", [0, 2, 0, 0, 0, 0], [None, 2, None, None, None, None]),
-    _build_chord("f_maj7", "F major 7", [None, None, 3, 2, 1, 0], [None, None, 3, 2, 1, None]),
-    _build_chord("g_major", "G major", [3, 2, 0, 0, 0, 3], [2, 1, None, None, None, 3]),
-    _build_chord("g_7", "G7", [3, 2, 0, 0, 0, 1], [3, 2, None, None, None, 1]),
-    _build_chord("g_maj7", "G major 7", [3, 2, 0, 0, 0, 2], [3, 2, None, None, None, 1]),
-)
+_CHORDS_FILE = Path(__file__).resolve().parents[3] / "config" / "chords.yaml"
 
+
+def _load_chords_from_yaml(path: Path) -> tuple[Chord, ...]:
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict) or "chords" not in raw:
+        raise ValueError(f"{path}: expected a top-level 'chords' list")
+    return tuple(
+        _build_chord(
+            chord_id=entry["id"],
+            name=entry["name"],
+            frets=entry["frets"],
+            fingers=entry["fingers"],
+        )
+        for entry in raw["chords"]
+    )
+
+
+CHORDS: tuple[Chord, ...] = _load_chords_from_yaml(_CHORDS_FILE)
 
 _CHORDS_BY_ID: dict[str, Chord] = {chord.id: chord for chord in CHORDS}
 
@@ -136,3 +132,52 @@ def pick_chord(rng: random.Random) -> Chord:
 
 def get_chord_by_id(chord_id: str) -> Chord | None:
     return _CHORDS_BY_ID.get(chord_id)
+
+
+_SEPARATORS_RE = re.compile(r"[\s\-_]+")
+_BARE_ROOT_RE = re.compile(r"^([a-g]#?)$")
+_ROOT_PLUS_M_RE = re.compile(r"^([a-g]#?)m$")
+
+# Single-pass token expansion. Order matters — Python regex alternation takes the
+# first alternative that matches at each position, so longer tokens must come
+# first to prevent e.g. "minor" being re-matched as "min" → "minoror".
+_QUALITY_RE = re.compile(r"major7|minor7|maj7|min7|m7|major|minor|maj|min")
+_QUALITY_MAP = {
+    "major7": "major7",
+    "minor7": "minor7",
+    "maj7": "major7",
+    "min7": "minor7",
+    "m7": "minor7",
+    "major": "major",
+    "minor": "minor",
+    "maj": "major",
+    "min": "minor",
+}
+
+
+def _normalize_chord_name(s: str) -> str:
+    """Canonicalise a chord name so common spellings collapse to a single form.
+
+    Examples (input → canonical):
+        "A major"     → "amajor"
+        "A"           → "amajor"   (bare root assumed major)
+        "Am"          → "aminor"   (trailing m shorthand)
+        "Amin"        → "aminor"
+        "A minor"     → "aminor"
+        "Am7"         → "aminor7"
+        "Amaj7"       → "amajor7"
+        "A minor 7"   → "aminor7"
+    """
+    s = s.strip().lower().replace("♯", "#")
+    s = _SEPARATORS_RE.sub("", s)
+
+    s = _QUALITY_RE.sub(lambda m: _QUALITY_MAP[m.group(0)], s)
+
+    s = _ROOT_PLUS_M_RE.sub(r"\1minor", s)
+    s = _BARE_ROOT_RE.sub(r"\1major", s)
+
+    return s
+
+
+def is_correct_chord_guess(guess: str, chord: Chord) -> bool:
+    return _normalize_chord_name(guess) == _normalize_chord_name(chord.name)

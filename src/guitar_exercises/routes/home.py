@@ -15,6 +15,8 @@ class ExerciseListing(BaseModel):
     name: str
     description: str
     url: str
+    icon: str
+    icon_label: str
 
 
 EXERCISES: list[ExerciseListing] = [
@@ -26,6 +28,19 @@ EXERCISES: list[ExerciseListing] = [
             "Immediate per-string feedback."
         ),
         url="/exercises/chord-notes",
+        icon="🎵",
+        icon_label="Musical note — name the notes of the chord",
+    ),
+    ExerciseListing(
+        slug="chord-name",
+        name="Chord Name Recognition",
+        description=(
+            "Identify the chord name from its fretboard shape. "
+            "Free-text input accepts aliases (e.g. Am, A minor, Aminor)."
+        ),
+        url="/exercises/chord-name",
+        icon="🎸",
+        icon_label="Guitar — name the chord from its shape",
     ),
 ]
 

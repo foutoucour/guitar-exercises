@@ -27,7 +27,7 @@ def _fret_dot_y(fret: int) -> float:
     return _NUT_Y + _FRET_SPACING * fret - _FRET_SPACING / 2
 
 
-def _describe_chord(chord: Chord) -> str:
+def _describe_chord(chord: Chord, *, reveal_name: bool) -> str:
     parts: list[str] = []
     for spec in chord.strings:
         label = f"{spec.string_number} string"
@@ -35,10 +35,17 @@ def _describe_chord(chord: Chord) -> str:
             case StringState.MUTED:
                 parts.append(f"{label} muted")
             case StringState.OPEN:
-                parts.append(f"{label} open {spec.note.value}")
+                if reveal_name:
+                    parts.append(f"{label} open {spec.note.value}")
+                else:
+                    parts.append(f"{label} open")
             case StringState.FRETTED:
-                parts.append(f"{label} fret {spec.fret} {spec.note.value}")
-    return f"Chord diagram for {chord.name}. " + ". ".join(parts) + "."
+                if reveal_name:
+                    parts.append(f"{label} fret {spec.fret} {spec.note.value}")
+                else:
+                    parts.append(f"{label} fret {spec.fret}")
+    prefix = f"Chord diagram for {chord.name}" if reveal_name else "Chord diagram"
+    return f"{prefix}. " + ". ".join(parts) + "."
 
 
 def _render_marker(spec: StringSpec, index: int) -> str:
@@ -77,9 +84,9 @@ def _render_finger(spec: StringSpec, index: int) -> str:
     )
 
 
-def render_chord_svg(chord: Chord) -> str:
-    title = escape(chord.name)
-    desc = escape(_describe_chord(chord))
+def render_chord_svg(chord: Chord, *, reveal_name: bool = True) -> str:
+    title = escape(chord.name) if reveal_name else "Chord diagram"
+    desc = escape(_describe_chord(chord, reveal_name=reveal_name))
 
     string_lines = [
         f'<line x1="{_string_x(i):.1f}" y1="{_NUT_Y}" '

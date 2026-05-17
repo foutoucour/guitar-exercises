@@ -11,8 +11,11 @@
     {% for ex in exercises %}
       <li class="exercise-card">
         <a class="exercise-card-link" href="{{ ex.url }}">
-          <h2 class="exercise-card-title">{{ ex.name }}</h2>
-          <p class="exercise-card-desc">{{ ex.description }}</p>
+          <span class="exercise-card-icon" role="img" aria-label="{{ ex.icon_label }}">{{ ex.icon }}</span>
+          <div class="exercise-card-body">
+            <h2 class="exercise-card-title">{{ ex.name }}</h2>
+            <p class="exercise-card-desc">{{ ex.description }}</p>
+          </div>
         </a>
       </li>
     {% endfor %}
