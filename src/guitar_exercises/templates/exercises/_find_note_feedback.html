@@ -1,0 +1,15 @@
+{% set review = true %}
+<div id="find-note-board" class="find-note-board find-note-board-review">
+  <div class="find-note-feedback {{ 'correct' if correct else 'incorrect' }}" aria-live="polite">
+    {% if correct %}
+      <span class="answer-feedback">✓ Correct: {{ target_note.value }} at fret {{ clicked_fret }}</span>
+      <span class="next-chord-hint">Next question coming up…</span>
+      <script>window.GuitarExercises.advanceTo('/exercises/find-note');</script>
+    {% else %}
+      <span class="answer-feedback">✗ You clicked fret {{ clicked_fret }} ({{ user_note }}) — {{ target_note.value }} is at fret {% for f in correct_frets %}{{ f }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+      <a class="new-chord" href="/exercises/find-note">New question</a>
+    {% endif %}
+  </div>
+
+  {% include "exercises/_fretboard.html" %}
+</div>

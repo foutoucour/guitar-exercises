@@ -43,6 +43,17 @@ EXERCISES: list[ExerciseListing] = [
         icon="🎸",
         icon_label="Guitar — name the chord from its shape",
     ),
+    ExerciseListing(
+        slug="find-note",
+        name="Find the Note",
+        description=(
+            "A string and a target note are given. "
+            "Click the fret on the fretboard where that note lives."
+        ),
+        url="/exercises/find-note",
+        icon="🎯",
+        icon_label="Target — find the note on the fretboard",
+    ),
 ]
 
 

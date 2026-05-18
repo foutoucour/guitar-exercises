@@ -11,7 +11,13 @@ from guitar_exercises.domain.chords import (
     is_correct_chord_guess,
     pick_chord,
 )
-from guitar_exercises.domain.notes import CHROMATIC, is_correct_guess
+from guitar_exercises.domain.find_note import (
+    MAX_FRET,
+    find_frets_for_note,
+    pick_find_note_question,
+)
+from guitar_exercises.domain.notes import CHROMATIC, Note, is_correct_guess
+from guitar_exercises.domain.tuning import STANDARD_TUNING, note_for_string
 from guitar_exercises.rendering.chord_svg import render_chord_svg
 from guitar_exercises.version import get_version
 
@@ -110,6 +116,63 @@ async def chord_name_check(
             "chord_id": chord_id,
             "guess": cleaned_guess,
             "expected_name": chord.name,
+            "correct": correct,
+        },
+    )
+
+
+def _find_note_context(question_string: int, target_note: Note) -> dict[str, object]:
+    return {
+        "string_number": question_string,
+        "target_note": target_note,
+        "max_fret": MAX_FRET,
+        "fret_range": list(range(MAX_FRET + 1)),
+        "string_order": [1, 2, 3, 4, 5, 6],
+        "open_notes": {s: STANDARD_TUNING[s].value for s in STANDARD_TUNING},
+    }
+
+
+@router.get("/find-note", response_class=HTMLResponse)
+async def find_note_page(
+    request: Request,
+    rng: Annotated[random.Random, Depends(get_rng)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+) -> HTMLResponse:
+    question = pick_find_note_question(rng)
+    context = _find_note_context(question.string_number, question.target_note)
+    return templates.TemplateResponse(
+        request,
+        "exercises/find_note.html",
+        {**context, "correct_frets": list(question.correct_frets)},
+    )
+
+
+@router.post("/find-note/check", response_class=HTMLResponse)
+async def find_note_check(
+    request: Request,
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    string_number: Annotated[int, Form(ge=1, le=6)],
+    target_note: Annotated[str, Form(min_length=1, max_length=2)],
+    fret: Annotated[int, Form(ge=0, le=MAX_FRET)],
+) -> HTMLResponse:
+    try:
+        note = Note(target_note)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="invalid target note") from exc
+
+    correct_frets = find_frets_for_note(string_number, note)
+    correct = fret in correct_frets
+    user_note = note_for_string(string_number, fret)
+
+    context = _find_note_context(string_number, note)
+    return templates.TemplateResponse(
+        request,
+        "exercises/_find_note_feedback.html",
+        {
+            **context,
+            "correct_frets": list(correct_frets),
+            "clicked_fret": fret,
+            "user_note": user_note.value,
             "correct": correct,
         },
     )

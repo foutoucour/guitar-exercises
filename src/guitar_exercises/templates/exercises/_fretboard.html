@@ -1,0 +1,75 @@
+{# Renders the fretboard grid.
+
+   Required context:
+     string_number  — target string (1..6, given by the prompt)
+     target_note    — the Note value the user must find
+     max_fret       — int (inclusive upper bound; expects 12)
+     fret_range     — range(0..max_fret)
+     string_order   — [1, 2, 3, 4, 5, 6] (top row = high E = string 1)
+     open_notes     — {string_number: note_value}
+
+   Mode-specific context (defaults assume interactive mode):
+     review         — bool; when true, render cells as static review state
+     correct_frets  — frets that match target_note on the target string
+     clicked_fret   — fret the user submitted (review mode only)
+     correct        — bool result (review mode only)
+#}
+{% set review = review | default(false) %}
+<div class="fretboard {{ 'fretboard-review' if review else '' }}"
+     role="group"
+     aria-label="Fretboard. Find {{ target_note.value if target_note.value is defined else target_note }} on string {{ string_number }}.">
+  <div class="fretboard-fret-label"></div>
+  {% for fret in fret_range %}
+    <div class="fretboard-fret-label">{{ fret }}</div>
+  {% endfor %}
+
+  {% for s in string_order %}
+    {% set is_target = s == string_number %}
+    <div class="fretboard-string-label {{ 'fretboard-string-label-target' if is_target else '' }}">
+      <span class="fretboard-string-num">{{ s }}</span>
+      <span class="fretboard-string-open">{{ open_notes[s] }}</span>
+    </div>
+    {% for fret in fret_range %}
+      {% set is_open = fret == 0 %}
+      {% set is_clicked = review and is_target and fret == clicked_fret %}
+      {% set is_correct_fret = review and is_target and fret in correct_frets %}
+      {% set cell_classes = [
+        'fretboard-cell',
+        'fretboard-cell-open' if is_open else '',
+        'fretboard-cell-target' if is_target else '',
+        'fretboard-cell-nut' if fret == 1 else '',
+        'fretboard-cell-clicked-correct' if (is_clicked and is_correct_fret) else '',
+        'fretboard-cell-clicked-wrong' if (is_clicked and not is_correct_fret) else '',
+        'fretboard-cell-reveal' if (review and is_correct_fret and not is_clicked) else '',
+      ] | reject('equalto', '') | join(' ') %}
+      {% if not review and is_target %}
+        <button
+          type="submit"
+          name="fret"
+          value="{{ fret }}"
+          class="{{ cell_classes }}"
+          aria-label="String {{ s }} fret {{ fret }}"
+        ><span class="fretboard-cell-fret-num">{{ fret }}</span></button>
+      {% else %}
+        <div class="{{ cell_classes }}" aria-hidden="true">
+          {% if is_clicked and is_correct_fret %}<span class="fretboard-cell-mark">✓</span>
+          {% elif is_clicked %}<span class="fretboard-cell-mark">✗</span>
+          {% elif review and is_correct_fret %}<span class="fretboard-cell-mark">●</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  <div class="fretboard-dot-cell"></div>
+  {% for fret in fret_range %}
+    <div class="fretboard-dot-cell">
+      {% if fret in [3, 5, 7, 9] %}
+        <span class="fretboard-dot"></span>
+      {% elif fret == 12 %}
+        <span class="fretboard-dot"></span>
+        <span class="fretboard-dot"></span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
