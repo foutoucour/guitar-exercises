@@ -60,7 +60,7 @@ def _set_recent_cookie(
     recent: list[str],
     new_key: str,
 ) -> None:
-    """Append ``new_key`` to ``recent`` and write the cookie back on ``response``."""
+    """Prepend ``new_key`` to ``recent`` and write the cookie back on ``response``."""
     response.set_cookie(
         key=cookie_name,
         value=serialize_recent(push_recent(recent, new_key)),
@@ -76,7 +76,7 @@ async def chord_notes_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    recent_chord_notes: Annotated[str | None, Cookie()] = None,
+    recent_chord_notes: Annotated[str | None, Cookie(alias=RECENT_COOKIE_CHORD_NOTES)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_chord_notes)
     chord = pick_chord(rng, exclude_keys=recent)
@@ -124,7 +124,7 @@ async def chord_name_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    recent_chord_name: Annotated[str | None, Cookie()] = None,
+    recent_chord_name: Annotated[str | None, Cookie(alias=RECENT_COOKIE_CHORD_NAME)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_chord_name)
     chord = pick_chord(rng, exclude_keys=recent)
@@ -182,7 +182,7 @@ async def find_note_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    recent_find_note: Annotated[str | None, Cookie()] = None,
+    recent_find_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_FIND_NOTE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_find_note)
     question = pick_find_note_question(rng, exclude_keys=recent)
@@ -238,7 +238,7 @@ async def name_note_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
-    recent_name_note: Annotated[str | None, Cookie()] = None,
+    recent_name_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_NAME_NOTE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_name_note)
     question = pick_name_note_question(rng, exclude_keys=recent)

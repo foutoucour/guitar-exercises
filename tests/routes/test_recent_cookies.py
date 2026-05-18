@@ -76,8 +76,12 @@ def test_cookie_trims_to_window(
 
 def test_each_exercise_uses_an_independent_cookie(client: TestClient) -> None:
     # Visiting one exercise must not populate another exercise's history.
-    expected_cookies = {RECENT_COOKIE_CHORD_NOTES, RECENT_COOKIE_CHORD_NAME,
-                       RECENT_COOKIE_FIND_NOTE, RECENT_COOKIE_NAME_NOTE}
+    expected_cookies = {
+        RECENT_COOKIE_CHORD_NOTES,
+        RECENT_COOKIE_CHORD_NAME,
+        RECENT_COOKIE_FIND_NOTE,
+        RECENT_COOKIE_NAME_NOTE,
+    }
     for path, cookie, _ in EXERCISES:
         client.cookies.clear()
         client.get(path)
