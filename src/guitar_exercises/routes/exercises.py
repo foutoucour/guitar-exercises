@@ -1,12 +1,13 @@
 import random
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi import APIRouter, Cookie, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from guitar_exercises.config import Settings, get_settings
 from guitar_exercises.domain.chords import (
+    chord_question_key,
     get_chord_by_id,
     is_correct_chord_guess,
     pick_chord,
@@ -14,15 +15,33 @@ from guitar_exercises.domain.chords import (
 from guitar_exercises.domain.find_note import (
     MAX_FRET,
     find_frets_for_note,
+    find_note_question_key,
     pick_find_note_question,
 )
-from guitar_exercises.domain.name_note import pick_name_note_question
+from guitar_exercises.domain.name_note import (
+    name_note_question_key,
+    pick_name_note_question,
+)
 from guitar_exercises.domain.notes import CHROMATIC, Note, is_correct_guess
+from guitar_exercises.domain.recent import (
+    parse_recent,
+    push_recent,
+    serialize_recent,
+)
 from guitar_exercises.domain.tuning import STANDARD_TUNING, note_for_string
 from guitar_exercises.rendering.chord_svg import render_chord_svg
 from guitar_exercises.version import get_version
 
 router = APIRouter(prefix="/exercises", tags=["exercises"])
+
+# Per-exercise cookie names — each game keeps its own recent-questions
+# history so progress in one game does not lock questions out of another.
+RECENT_COOKIE_CHORD_NOTES = "recent_chord_notes"
+RECENT_COOKIE_CHORD_NAME = "recent_chord_name"
+RECENT_COOKIE_FIND_NOTE = "recent_find_note"
+RECENT_COOKIE_NAME_NOTE = "recent_name_note"
+
+_RECENT_COOKIE_MAX_AGE = 60 * 60 * 24  # 1 day
 
 
 def get_rng() -> random.Random:
@@ -35,19 +54,40 @@ def get_templates(settings: Annotated[Settings, Depends(get_settings)]) -> Jinja
     return templates
 
 
+def _set_recent_cookie(
+    response: HTMLResponse,
+    cookie_name: str,
+    recent: list[str],
+    new_key: str,
+) -> None:
+    """Prepend ``new_key`` to ``recent`` and write the cookie back on ``response``."""
+    response.set_cookie(
+        key=cookie_name,
+        value=serialize_recent(push_recent(recent, new_key)),
+        max_age=_RECENT_COOKIE_MAX_AGE,
+        path="/exercises",
+        httponly=True,
+        samesite="lax",
+    )
+
+
 @router.get("/chord-notes", response_class=HTMLResponse)
 async def chord_notes_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    recent_chord_notes: Annotated[str | None, Cookie(alias=RECENT_COOKIE_CHORD_NOTES)] = None,
 ) -> HTMLResponse:
-    chord = pick_chord(rng)
+    recent = parse_recent(recent_chord_notes)
+    chord = pick_chord(rng, exclude_keys=recent)
     svg = render_chord_svg(chord)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "exercises/chord_notes.html",
         {"chord": chord, "svg": svg, "notes": list(CHROMATIC)},
     )
+    _set_recent_cookie(response, RECENT_COOKIE_CHORD_NOTES, recent, chord_question_key(chord))
+    return response
 
 
 @router.post("/chord-notes/check", response_class=HTMLResponse)
@@ -84,14 +124,18 @@ async def chord_name_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    recent_chord_name: Annotated[str | None, Cookie(alias=RECENT_COOKIE_CHORD_NAME)] = None,
 ) -> HTMLResponse:
-    chord = pick_chord(rng)
+    recent = parse_recent(recent_chord_name)
+    chord = pick_chord(rng, exclude_keys=recent)
     svg = render_chord_svg(chord, reveal_name=False)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "exercises/chord_name.html",
         {"chord": chord, "svg": svg},
     )
+    _set_recent_cookie(response, RECENT_COOKIE_CHORD_NAME, recent, chord_question_key(chord))
+    return response
 
 
 @router.post("/chord-name/check", response_class=HTMLResponse)
@@ -138,10 +182,12 @@ async def find_note_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    recent_find_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_FIND_NOTE)] = None,
 ) -> HTMLResponse:
-    question = pick_find_note_question(rng)
+    recent = parse_recent(recent_find_note)
+    question = pick_find_note_question(rng, exclude_keys=recent)
     context = _fretboard_context(question.string_number)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "exercises/find_note.html",
         {
@@ -149,6 +195,10 @@ async def find_note_page(
             "target_note": question.target_note,
         },
     )
+    _set_recent_cookie(
+        response, RECENT_COOKIE_FIND_NOTE, recent, find_note_question_key(question)
+    )
+    return response
 
 
 @router.post("/find-note/check", response_class=HTMLResponse)
@@ -188,10 +238,12 @@ async def name_note_page(
     request: Request,
     rng: Annotated[random.Random, Depends(get_rng)],
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    recent_name_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_NAME_NOTE)] = None,
 ) -> HTMLResponse:
-    question = pick_name_note_question(rng)
+    recent = parse_recent(recent_name_note)
+    question = pick_name_note_question(rng, exclude_keys=recent)
     context = _fretboard_context(question.string_number)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "exercises/name_note.html",
         {
@@ -201,6 +253,10 @@ async def name_note_page(
             "notes": list(CHROMATIC),
         },
     )
+    _set_recent_cookie(
+        response, RECENT_COOKIE_NAME_NOTE, recent, name_note_question_key(question)
+    )
+    return response
 
 
 @router.post("/name-note/check", response_class=HTMLResponse)

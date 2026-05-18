@@ -16,7 +16,7 @@ PINNED_CHORD_NAME = "G major"
 def pinned_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     pinned: Chord = get_chord_by_id(PINNED_CHORD_ID)  # type: ignore[assignment]
     assert pinned is not None, f"fixture chord {PINNED_CHORD_ID!r} missing from catalog"
-    monkeypatch.setattr(exercises_module, "pick_chord", lambda _rng: pinned)
+    monkeypatch.setattr(exercises_module, "pick_chord", lambda *_a, **_kw: pinned)
     return TestClient(create_app())
 
 
