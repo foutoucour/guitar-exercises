@@ -53,7 +53,9 @@
   const playable = Array.from(stringList.querySelectorAll(".string-row")).filter(isPlayable);
   if (playable.length > 0) activate(playable[0], false);
 
-  // Tab/Shift+Tab inside an active row's chip group cycles within the group.
+  // Tab/Shift+Tab inside an active row's chip group advances within the group.
+  // At the first chip (Shift+Tab) or last chip (Tab) normal browser Tab behaviour
+  // is restored so the user can reach other page controls without answering.
   document.addEventListener("keydown", function (event) {
     if (event.key !== "Tab") return;
     const focused = document.activeElement;
@@ -64,10 +66,15 @@
     if (chips.length === 0) return;
     const idx = chips.indexOf(focused);
     if (idx === -1) return;
-    const dir = event.shiftKey ? -1 : 1;
-    const next = chips[(idx + dir + chips.length) % chips.length];
-    event.preventDefault();
-    next.focus();
+    if (event.shiftKey) {
+      if (idx === 0) return; // allow Shift+Tab out at first chip
+      event.preventDefault();
+      chips[idx - 1].focus();
+    } else {
+      if (idx === chips.length - 1) return; // allow Tab out at last chip
+      event.preventDefault();
+      chips[idx + 1].focus();
+    }
   });
 
   function anyIncorrect() {

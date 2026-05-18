@@ -30,15 +30,21 @@ def _fret_dot_y(fret: int, start_fret: int) -> float:
 
 
 def _compute_start_fret(chord: Chord) -> int:
-    """Lowest visible fret in the diagram. Returns 1 when the shape fits in the open window."""
+    """Lowest visible fret in the diagram. Returns 1 when the shape fits in the open window.
+
+    Open strings always anchor the diagram to fret 1 (the nut). For fully-fretted
+    shapes the window slides to start at the lowest fretted note, showing an 'Nfr'
+    label so the player knows where on the neck to position their hand.
+    """
+    has_open = any(spec.state is StringState.OPEN for spec in chord.strings)
+    if has_open:
+        return 1
     fretted = [
         spec.fret
         for spec in chord.strings
         if spec.state is StringState.FRETTED and spec.fret is not None
     ]
     if not fretted:
-        return 1
-    if max(fretted) <= _FRET_ROWS:
         return 1
     return min(fretted)
 
