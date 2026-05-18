@@ -131,7 +131,7 @@ def test_post_check_normalizes_sharp_input(pinned_client: TestClient) -> None:
 def test_post_check_out_of_range_fret_returns_422(seeded_client: TestClient) -> None:
     response = seeded_client.post(
         "/exercises/name-note/check",
-        data={"string_number": 5, "fret": 13, "guess": "A"},
+        data={"string_number": 5, "fret": 18, "guess": "A"},
     )
     assert response.status_code == 422
 

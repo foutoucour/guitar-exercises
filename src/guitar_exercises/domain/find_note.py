@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from guitar_exercises.domain.notes import CHROMATIC, Note
 from guitar_exercises.domain.tuning import STANDARD_TUNING, note_for_string
 
-MAX_FRET = 12
+MAX_FRET = 17
 
 
 class FindNoteQuestion(BaseModel):
