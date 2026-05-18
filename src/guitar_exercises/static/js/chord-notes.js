@@ -100,5 +100,8 @@
     }
     const newChord = document.querySelector("a.new-chord");
     if (newChord) newChord.focus();
+    if (window.GuitarExercises && window.GuitarExercises.armKeyAdvance) {
+      window.GuitarExercises.armKeyAdvance("/exercises/chord-notes");
+    }
   });
 })();
