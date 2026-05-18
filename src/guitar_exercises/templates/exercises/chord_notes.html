@@ -12,12 +12,20 @@
     <figcaption class="sr-only">{{ chord.name }} chord diagram</figcaption>
   </figure>
 
+  {# First non-muted string is the only one in the tab order; later strings
+     are unlocked after the user picks an answer. See static/js/chord-notes.js. #}
+  {% set first_playable_string = (chord.strings
+                                  | rejectattr('state.value', 'equalto', 'muted')
+                                  | map(attribute='string_number')
+                                  | first) %}
   <ol class="string-list">
     {% for spec in chord.strings %}
+      {% set is_active = spec.string_number == first_playable_string %}
       {% include "exercises/_string_row.html" %}
     {% endfor %}
   </ol>
 
   <a class="new-chord" href="/exercises/chord-notes">New chord</a>
 </section>
+<script src="/static/js/chord-notes.js?v=m3-9" defer></script>
 {% endblock %}

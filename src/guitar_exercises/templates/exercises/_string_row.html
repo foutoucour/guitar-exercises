@@ -18,6 +18,7 @@
             name="guess"
             value="{{ note.value }}"
             class="note-chip"
+            tabindex="{{ '0' if is_active|default(false) else '-1' }}"
           >{{ note.value }}</button>
         {% endfor %}
       </div>
