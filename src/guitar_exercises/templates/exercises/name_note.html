@@ -5,14 +5,14 @@
   <header class="exercise-header">
     <p class="exercise-eyebrow">Name the note</p>
     <h1 class="chord-name">
-      What note is at fret <span class="find-note-target">{{ highlighted_fret }}</span>
-      on string <span class="find-note-target">{{ string_number }}</span>?
+      What note is on string <span class="find-note-target">{{ string_number }}</span>
+      at fret <span class="find-note-target">{{ highlighted_fret }}</span>?
     </h1>
   </header>
 
   <div id="name-note-board" class="name-note-board">
     {% set mode = 'highlight' %}
-    {% set aria_label = 'Fretboard. Name the note at fret ' ~ highlighted_fret ~ ' on string ' ~ string_number ~ '.' %}
+    {% set aria_label = 'Fretboard. Name the note on string ' ~ string_number ~ ' at fret ' ~ highlighted_fret ~ '.' %}
     {% include "exercises/_fretboard.html" %}
 
     <form
@@ -23,6 +23,10 @@
     >
       <input type="hidden" name="string_number" value="{{ string_number }}">
       <input type="hidden" name="fret" value="{{ highlighted_fret }}">
+      <p class="name-note-prompt">
+        What note is on string <span class="find-note-target">{{ string_number }}</span>
+        at fret <span class="find-note-target">{{ highlighted_fret }}</span>?
+      </p>
       <div class="note-chips" role="group" aria-label="Pick the note">
         {% for note in notes %}
           <button
