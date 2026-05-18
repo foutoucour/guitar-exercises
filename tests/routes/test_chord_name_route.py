@@ -71,6 +71,34 @@ def test_post_check_correct_canonical_guess(client: TestClient) -> None:
     assert "A major" in response.text
 
 
+def test_post_check_correct_auto_advances_to_next_chord(client: TestClient) -> None:
+    # A correct guess should auto-advance without a click — the user shouldn't
+    # have to hit "New chord" after every right answer. The navigation goes
+    # through the shared helper so the delay can be tuned site-wide.
+    response = client.post(
+        "/exercises/chord-name/check",
+        data={"chord_id": "a_major", "guess": "A major"},
+    )
+    body = response.text
+    assert 'data-auto-advance="1"' in body
+    assert "window.GuitarExercises.advanceTo('/exercises/chord-name')" in body
+    # No manual link on correct — auto-advance replaces it.
+    assert 'class="new-chord"' not in body
+
+
+def test_post_check_incorrect_keeps_manual_new_chord_link(client: TestClient) -> None:
+    # Incorrect feedback must NOT auto-advance — the user needs time to read
+    # the expected answer before moving on.
+    response = client.post(
+        "/exercises/chord-name/check",
+        data={"chord_id": "a_major", "guess": "Bm"},
+    )
+    body = response.text
+    assert 'data-auto-advance="0"' in body
+    assert "advanceTo" not in body
+    assert 'href="/exercises/chord-name"' in body
+
+
 def test_post_check_correct_alias_am(client: TestClient) -> None:
     response = client.post(
         "/exercises/chord-name/check",
