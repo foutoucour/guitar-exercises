@@ -19,6 +19,8 @@
     >
       <input type="hidden" name="string_number" value="{{ string_number }}">
       <input type="hidden" name="target_note" value="{{ target_note.value }}">
+      {% set mode = 'interactive' %}
+      {% set aria_label = 'Fretboard. Find ' ~ target_note.value ~ ' on string ' ~ string_number ~ '.' %}
       {% include "exercises/_fretboard.html" %}
     </form>
   </div>

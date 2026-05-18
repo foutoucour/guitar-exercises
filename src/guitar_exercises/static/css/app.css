@@ -925,6 +925,15 @@ button.fretboard-cell:active {
   font-size: 1.4rem;
 }
 
+/* Highlight mode — the system marks one fret and the user must name it. */
+.fretboard-cell-highlight {
+  background: var(--md-sys-color-accent);
+}
+.fretboard-cell-highlight .fretboard-cell-mark {
+  color: var(--md-sys-color-on-accent);
+  font-size: 1.4rem;
+}
+
 /* Inlay-dot row at the bottom. */
 .fretboard-dot-cell {
   display: flex;
@@ -969,8 +978,37 @@ button.fretboard-cell:active {
 .find-note-feedback.incorrect .answer-feedback { color: var(--md-sys-color-error); }
 
 @media (min-width: 720px) {
-  .exercise--find-note { gap: var(--space-5); }
+  .exercise--find-note,
+  .exercise--name-note { gap: var(--space-5); }
   .fretboard { padding: var(--space-3) 0; }
   .fretboard-cell,
   .fretboard-string-label { height: 2.5rem; }
+}
+
+/* =========================================================
+   Name-the-Note exercise — fretboard above, chip group below
+   ========================================================= */
+.exercise--name-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.name-note-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.name-note-form {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.name-note-form .note-chips {
+  justify-content: center;
 }

@@ -54,6 +54,17 @@ EXERCISES: list[ExerciseListing] = [
         icon="🎯",
         icon_label="Target — find the note on the fretboard",
     ),
+    ExerciseListing(
+        slug="name-note",
+        name="Name the Note",
+        description=(
+            "A fret on the fretboard is marked. "
+            "Pick the note it produces from the chip list."
+        ),
+        url="/exercises/name-note",
+        icon="🎼",
+        icon_label="Musical score — name the highlighted fret",
+    ),
 ]
 
 

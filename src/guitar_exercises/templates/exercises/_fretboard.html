@@ -1,23 +1,25 @@
 {# Renders the fretboard grid.
 
    Required context:
-     string_number  — target string (1..6, given by the prompt)
-     target_note    — the Note value the user must find
+     string_number  — target string (1..6)
      max_fret       — int (inclusive upper bound; expects 12)
      fret_range     — range(0..max_fret)
      string_order   — [1, 2, 3, 4, 5, 6] (top row = high E = string 1)
      open_notes     — {string_number: note_value}
+     mode           — 'interactive' (default) | 'review' | 'highlight'
+     aria_label     — accessibility label for the fretboard grid
 
-   Mode-specific context (defaults assume interactive mode):
-     review         — bool; when true, render cells as static review state
-     correct_frets  — frets that match target_note on the target string
-     clicked_fret   — fret the user submitted (review mode only)
-     correct        — bool result (review mode only)
+   Mode-specific context:
+     interactive: target_note (so the aria label can name what to find);
+                  the target-string cells are rendered as <button> submits.
+     review:      correct_frets (iterable of frets matching target_note),
+                  clicked_fret (the fret the user picked), target_note.
+     highlight:   highlighted_fret (the single fret the system points at).
 #}
-{% set review = review | default(false) %}
-<div class="fretboard {{ 'fretboard-review' if review else '' }}"
+{% set mode = mode | default('interactive') %}
+<div class="fretboard fretboard-mode-{{ mode }}"
      role="group"
-     aria-label="Fretboard. Find {{ target_note.value if target_note.value is defined else target_note }} on string {{ string_number }}.">
+     aria-label="{{ aria_label | default('Fretboard') }}">
   <div class="fretboard-fret-label"></div>
   {% for fret in fret_range %}
     <div class="fretboard-fret-label">{{ fret }}</div>
@@ -31,8 +33,9 @@
     </div>
     {% for fret in fret_range %}
       {% set is_open = fret == 0 %}
-      {% set is_clicked = review and is_target and fret == clicked_fret %}
-      {% set is_correct_fret = review and is_target and fret in correct_frets %}
+      {% set is_clicked = mode == 'review' and is_target and fret == clicked_fret %}
+      {% set is_correct_fret = mode == 'review' and is_target and fret in (correct_frets | default([])) %}
+      {% set is_highlighted = mode == 'highlight' and is_target and fret == highlighted_fret %}
       {% set cell_classes = [
         'fretboard-cell',
         'fretboard-cell-open' if is_open else '',
@@ -40,9 +43,10 @@
         'fretboard-cell-nut' if fret == 1 else '',
         'fretboard-cell-clicked-correct' if (is_clicked and is_correct_fret) else '',
         'fretboard-cell-clicked-wrong' if (is_clicked and not is_correct_fret) else '',
-        'fretboard-cell-reveal' if (review and is_correct_fret and not is_clicked) else '',
+        'fretboard-cell-reveal' if (mode == 'review' and is_correct_fret and not is_clicked) else '',
+        'fretboard-cell-highlight' if is_highlighted else '',
       ] | reject('equalto', '') | join(' ') %}
-      {% if not review and is_target %}
+      {% if mode == 'interactive' and is_target %}
         <button
           type="submit"
           name="fret"
@@ -54,7 +58,8 @@
         <div class="{{ cell_classes }}" aria-hidden="true">
           {% if is_clicked and is_correct_fret %}<span class="fretboard-cell-mark">✓</span>
           {% elif is_clicked %}<span class="fretboard-cell-mark">✗</span>
-          {% elif review and is_correct_fret %}<span class="fretboard-cell-mark">●</span>
+          {% elif mode == 'review' and is_correct_fret %}<span class="fretboard-cell-mark">●</span>
+          {% elif is_highlighted %}<span class="fretboard-cell-mark">●</span>
           {% endif %}
         </div>
       {% endif %}

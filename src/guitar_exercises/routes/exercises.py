@@ -16,6 +16,7 @@ from guitar_exercises.domain.find_note import (
     find_frets_for_note,
     pick_find_note_question,
 )
+from guitar_exercises.domain.name_note import pick_name_note_question
 from guitar_exercises.domain.notes import CHROMATIC, Note, is_correct_guess
 from guitar_exercises.domain.tuning import STANDARD_TUNING, note_for_string
 from guitar_exercises.rendering.chord_svg import render_chord_svg
@@ -121,10 +122,10 @@ async def chord_name_check(
     )
 
 
-def _find_note_context(question_string: int, target_note: Note) -> dict[str, object]:
+def _fretboard_context(string_number: int) -> dict[str, object]:
+    """Shared layout context for any exercise that renders the fretboard partial."""
     return {
-        "string_number": question_string,
-        "target_note": target_note,
+        "string_number": string_number,
         "max_fret": MAX_FRET,
         "fret_range": list(range(MAX_FRET + 1)),
         "string_order": [1, 2, 3, 4, 5, 6],
@@ -139,11 +140,15 @@ async def find_note_page(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
 ) -> HTMLResponse:
     question = pick_find_note_question(rng)
-    context = _find_note_context(question.string_number, question.target_note)
+    context = _fretboard_context(question.string_number)
     return templates.TemplateResponse(
         request,
         "exercises/find_note.html",
-        {**context, "correct_frets": list(question.correct_frets)},
+        {
+            **context,
+            "target_note": question.target_note,
+            "correct_frets": list(question.correct_frets),
+        },
     )
 
 
@@ -164,15 +169,61 @@ async def find_note_check(
     correct = fret in correct_frets
     user_note = note_for_string(string_number, fret)
 
-    context = _find_note_context(string_number, note)
+    context = _fretboard_context(string_number)
     return templates.TemplateResponse(
         request,
         "exercises/_find_note_feedback.html",
         {
             **context,
+            "target_note": note,
             "correct_frets": list(correct_frets),
             "clicked_fret": fret,
             "user_note": user_note.value,
+            "correct": correct,
+        },
+    )
+
+
+@router.get("/name-note", response_class=HTMLResponse)
+async def name_note_page(
+    request: Request,
+    rng: Annotated[random.Random, Depends(get_rng)],
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+) -> HTMLResponse:
+    question = pick_name_note_question(rng)
+    context = _fretboard_context(question.string_number)
+    return templates.TemplateResponse(
+        request,
+        "exercises/name_note.html",
+        {
+            **context,
+            "highlighted_fret": question.fret,
+            "expected_note": question.expected_note,
+            "notes": list(CHROMATIC),
+        },
+    )
+
+
+@router.post("/name-note/check", response_class=HTMLResponse)
+async def name_note_check(
+    request: Request,
+    templates: Annotated[Jinja2Templates, Depends(get_templates)],
+    string_number: Annotated[int, Form(ge=1, le=6)],
+    fret: Annotated[int, Form(ge=0, le=MAX_FRET)],
+    guess: Annotated[str, Form(min_length=1, max_length=4)],
+) -> HTMLResponse:
+    expected = note_for_string(string_number, fret)
+    correct = is_correct_guess(guess, expected)
+
+    context = _fretboard_context(string_number)
+    return templates.TemplateResponse(
+        request,
+        "exercises/_name_note_feedback.html",
+        {
+            **context,
+            "highlighted_fret": fret,
+            "expected_note": expected,
+            "guess": guess,
             "correct": correct,
         },
     )
