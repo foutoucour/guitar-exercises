@@ -16,6 +16,14 @@
   --md-sys-color-tertiary: #d4b88a;            /* cream binding */
   --md-sys-color-on-tertiary: #1a1308;
 
+  /* Accent — the third "catchy" color. Teal complements the warm gold palette
+     and reads unmistakably as "do this" against the dark ebony surface. */
+  --md-sys-color-accent: #4fd1c5;
+  --md-sys-color-on-accent: #062521;
+  --md-sys-color-accent-container: #1f3d3a;
+  --md-sys-color-on-accent-container: #b2efe8;
+  --md-sys-color-accent-halo: rgba(79, 209, 197, 0.45);
+
   --md-sys-color-error: #e08585;
   --md-sys-color-on-error: #1a0a0a;
   --md-sys-color-error-container: #2a1212;
@@ -408,11 +416,11 @@ body {
   border-color: var(--md-sys-color-primary);
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  box-shadow: 0 0 0 3px rgba(231, 196, 106, 0.35);
+  box-shadow: 0 0 0 3px var(--md-sys-color-accent-halo);
 }
 .note-chip:focus-visible::after { opacity: 0; }
 
-/* M3 outlined button — "New chord" */
+/* M3 filled button — primary CTA in the accent (teal) color. */
 .new-chord {
   display: inline-flex;
   align-items: center;
@@ -420,33 +428,42 @@ body {
   height: 2.25rem;
   padding: 0 1.25rem;
   border-radius: var(--md-sys-shape-corner-full);
-  border: 1px solid var(--md-sys-color-outline);
-  background: transparent;
-  color: var(--md-sys-color-primary);
+  border: none;
+  background: var(--md-sys-color-accent);
+  color: var(--md-sys-color-on-accent);
   text-decoration: none;
   font: var(--md-sys-typescale-label-large);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  box-shadow: var(--md-sys-elevation-1);
   transition:
-    border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+    box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
+/* State layer: darken the filled accent on hover/focus/press. */
 .new-chord::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--md-sys-color-primary);
+  background: var(--md-sys-color-on-accent);
   opacity: 0;
   transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
   pointer-events: none;
 }
-.new-chord:hover { border-color: var(--md-sys-color-primary); }
+.new-chord:hover { box-shadow: var(--md-sys-elevation-2); }
 .new-chord:hover::after { opacity: 0.08; }
+.new-chord:focus-visible {
+  outline: none;
+  box-shadow:
+    var(--md-sys-elevation-2),
+    0 0 0 3px var(--md-sys-color-accent-halo);
+}
 .new-chord:focus-visible::after { opacity: 0.12; }
-.new-chord:active::after { opacity: 0.12; }
+.new-chord:active::after { opacity: 0.16; }
 
 /* =========================================================
    Chord-name exercise — free-text guess form
@@ -522,10 +539,10 @@ body {
 .chord-guess-input:focus,
 .chord-guess-input:focus-visible {
   outline: none;
-  border-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-accent);
   box-shadow:
     var(--md-sys-elevation-1),
-    0 0 0 3px rgba(231, 196, 106, 0.35);
+    0 0 0 3px var(--md-sys-color-accent-halo);
 }
 
 .chord-guess-feedback {
@@ -616,8 +633,8 @@ body {
   width: 3rem;
   height: 3rem;
   border-radius: var(--md-sys-shape-corner-full);
-  background: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
+  background: var(--md-sys-color-accent-container);
+  color: var(--md-sys-color-on-accent-container);
   font-size: 1.6rem;
   line-height: 1;
   box-shadow: var(--md-sys-elevation-1);
