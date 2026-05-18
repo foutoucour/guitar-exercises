@@ -32,11 +32,11 @@ test-watch:
 	poetry run pytest --looponfail
 
 lint:
-	poetry run ruff check src tests
+	poetry run pre-commit run ruff --all-files
 
 format:
-	poetry run ruff format src tests
-	poetry run ruff check --fix src tests
+	poetry run pre-commit run ruff-format --all-files
+	poetry run pre-commit run ruff --all-files
 
 check:
 	poetry run pre-commit run --all-files
