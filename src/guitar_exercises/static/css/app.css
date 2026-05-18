@@ -1027,3 +1027,105 @@ button.fretboard-cell:active {
   color: var(--md-sys-color-on-surface);
   text-align: center;
 }
+
+/* =========================================================
+   Answer-timer + recent-times widget
+   ========================================================= */
+.exercise-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--md-sys-shape-corner-md);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+
+.exercise-timer-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.exercise-timer-live {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--md-sys-color-primary);
+  min-width: 4ch;
+}
+
+.exercise-timer-streak,
+.exercise-timer-streak-best,
+.exercise-timer-avg {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.exercise-timer-streak-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--md-sys-color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.exercise-timer-streak-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.exercise-timer-streak-best {
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.exercise-timer-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.exercise-timer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--md-sys-shape-corner-sm);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+
+.exercise-timer-chip.correct {
+  background: rgba(182, 226, 161, 0.16);
+  color: var(--md-sys-color-success);
+}
+
+.exercise-timer-chip.incorrect {
+  background: rgba(224, 133, 133, 0.16);
+  color: var(--md-sys-color-error);
+}
+
+.exercise-timer-chip-mark {
+  font-weight: 700;
+}
+
+.answer-feedback-time {
+  display: inline;
+  margin-left: 0.4rem;
+  font-weight: 500;
+  font-size: 0.85em;
+  color: var(--md-sys-color-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}

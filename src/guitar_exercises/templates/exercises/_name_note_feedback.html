@@ -5,7 +5,7 @@
 
   <div class="find-note-feedback {{ 'correct' if correct else 'incorrect' }}" aria-live="polite">
     {% if correct %}
-      <span class="answer-feedback">✓ Correct: {{ expected_note.value }}</span>
+      <span class="answer-feedback">✓ Correct: {{ expected_note.value }}{% if elapsed_ms is not none %} <span class="answer-feedback-time">in {{ "%.1f"|format(elapsed_ms / 1000) }}s</span>{% endif %}</span>
       <span class="next-chord-hint">Next question coming up…</span>
       <a class="new-chord" href="/exercises/name-note">Next question</a>
       <script>
@@ -18,7 +18,7 @@
         })();
       </script>
     {% else %}
-      <span class="answer-feedback">✗ You said {{ guess }} — the note is {{ expected_note.value }}</span>
+      <span class="answer-feedback">✗ You said {{ guess }} — the note is {{ expected_note.value }}{% if elapsed_ms is not none %} <span class="answer-feedback-time">in {{ "%.1f"|format(elapsed_ms / 1000) }}s</span>{% endif %}</span>
       <a class="new-chord" href="/exercises/name-note">New question</a>
     {% endif %}
   </div>

@@ -2,6 +2,7 @@
 {% block title %}Find {{ target_note.value }} on string {{ string_number }}{% endblock %}
 {% block content %}
 <section class="exercise exercise--find-note">
+  {% include "exercises/_timer.html" %}
   <header class="exercise-header">
     <p class="exercise-eyebrow">Find the note</p>
     <h1 class="chord-name">
