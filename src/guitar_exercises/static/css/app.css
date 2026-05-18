@@ -1012,9 +1012,18 @@ button.fretboard-cell:active {
 .name-note-form {
   margin: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .name-note-form .note-chips {
   justify-content: center;
+}
+
+.name-note-prompt {
+  margin: 0;
+  font: var(--md-sys-typescale-title-medium);
+  color: var(--md-sys-color-on-surface);
+  text-align: center;
 }
