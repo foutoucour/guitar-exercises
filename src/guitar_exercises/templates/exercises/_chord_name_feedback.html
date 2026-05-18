@@ -1,4 +1,4 @@
-<div class="chord-guess-feedback {{ 'correct' if correct else 'incorrect' }}" id="chord-guess" data-auto-advance="{{ '1' if correct else '0' }}">
+<div class="chord-guess-feedback {{ 'correct' if correct else 'incorrect' }}" id="chord-guess" data-auto-advance="{{ '1' if correct else '0' }}"{% if not correct %} data-key-advance="/exercises/chord-name"{% endif %}>
   {% if correct %}
     <span class="answer-feedback">✓ Correct: {{ expected_name }}</span>
     <span class="next-chord-hint" aria-live="polite">Next chord coming up…</span>
@@ -15,12 +15,5 @@
   {% else %}
     <span class="answer-feedback">✗ You said {{ guess }} — the chord is {{ expected_name }}</span>
     <a class="new-chord" href="/exercises/chord-name">New chord</a>
-    <script>
-      (function () {
-        if (window.GuitarExercises && typeof window.GuitarExercises.armKeyAdvance === 'function') {
-          window.GuitarExercises.armKeyAdvance('/exercises/chord-name');
-        }
-      })();
-    </script>
   {% endif %}
 </div>

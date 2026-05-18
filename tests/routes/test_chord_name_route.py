@@ -101,13 +101,14 @@ def test_post_check_incorrect_keeps_manual_new_chord_link(client: TestClient) ->
 
 def test_post_check_incorrect_arms_key_advance(client: TestClient) -> None:
     # Keyboard players must be able to move on with Enter/Space without
-    # reaching for the mouse — the failure feedback arms a key listener.
+    # reaching for the mouse — the failure feedback carries a data attribute
+    # that the shared auto-advance.js picks up after the htmx swap.
     response = client.post(
         "/exercises/chord-name/check",
         data={"chord_id": "a_major", "guess": "Bm"},
     )
     body = response.text
-    assert "window.GuitarExercises.armKeyAdvance('/exercises/chord-name')" in body
+    assert 'data-key-advance="/exercises/chord-name"' in body
 
 
 def test_post_check_correct_alias_am(client: TestClient) -> None:

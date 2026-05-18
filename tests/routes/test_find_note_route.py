@@ -86,13 +86,14 @@ def test_post_incorrect_fret_reveals_correct_frets(seeded_client: TestClient) ->
 
 def test_post_incorrect_fret_arms_key_advance(seeded_client: TestClient) -> None:
     # Keyboard players must be able to move on with Enter/Space — the failure
-    # feedback arms a one-shot key listener that navigates to a new question.
+    # feedback carries a data attribute that the shared auto-advance.js picks
+    # up after the htmx swap to arm a one-shot key listener.
     response = seeded_client.post(
         "/exercises/find-note/check",
         data={"string_number": 5, "target_note": "G", "fret": 3},
     )
     body = response.text
-    assert "GuitarExercises.armKeyAdvance('/exercises/find-note')" in body
+    assert 'data-key-advance="/exercises/find-note"' in body
 
 
 def test_post_correct_fret_for_open_string_accepted(seeded_client: TestClient) -> None:

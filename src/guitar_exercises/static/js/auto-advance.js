@@ -48,4 +48,21 @@
     };
     document.addEventListener("keydown", ns._keyAdvanceHandler);
   };
+
+  // Pick up [data-key-advance="<url>"] from any element htmx swaps in and arm
+  // the key listener. This is the failure-feedback path: an inline <script>
+  // inside the swapped fragment is unreliable across htmx configs, so the
+  // server marks the wrapper with a data attribute and we react to the swap.
+  function scanAndArm(root) {
+    if (!root || root.nodeType !== 1) return;
+    let el = null;
+    if (root.matches && root.matches("[data-key-advance]")) el = root;
+    if (!el && root.querySelector) el = root.querySelector("[data-key-advance]");
+    if (!el) return;
+    const url = el.getAttribute("data-key-advance");
+    if (url) ns.armKeyAdvance(url);
+  }
+  document.addEventListener("htmx:afterSwap", function (event) {
+    scanAndArm(event.target);
+  });
 })();
