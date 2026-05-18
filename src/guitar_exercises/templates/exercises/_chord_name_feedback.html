@@ -2,7 +2,16 @@
   {% if correct %}
     <span class="answer-feedback">✓ Correct: {{ expected_name }}</span>
     <span class="next-chord-hint" aria-live="polite">Next chord coming up…</span>
-    <script>window.GuitarExercises.advanceTo('/exercises/chord-name');</script>
+    <a class="new-chord" href="/exercises/chord-name">Next chord</a>
+    <script>
+      (function () {
+        if (window.GuitarExercises && typeof window.GuitarExercises.advanceTo === 'function') {
+          const fallback = document.currentScript.previousElementSibling;
+          if (fallback) fallback.hidden = true;
+          window.GuitarExercises.advanceTo('/exercises/chord-name');
+        }
+      })();
+    </script>
   {% else %}
     <span class="answer-feedback">✗ You said {{ guess }} — the chord is {{ expected_name }}</span>
     <a class="new-chord" href="/exercises/chord-name">New chord</a>

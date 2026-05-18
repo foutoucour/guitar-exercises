@@ -1,6 +1,11 @@
 # Guitar Exercises
 
+[![CI](https://github.com/foutoucour/guitar-exercises/actions/workflows/ci.yml/badge.svg)](https://github.com/foutoucour/guitar-exercises/actions/workflows/ci.yml)
+
 A web app of structured exercises for learning the guitar fretboard.
+
+* [Render Deployments](https://dashboard.render.com/web/srv-d84uu7btqb8s73flauo0)
+* [Webside](https://guitar-exercises.onrender.com)
 
 ## Concept
 

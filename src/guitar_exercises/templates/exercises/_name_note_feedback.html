@@ -1,0 +1,25 @@
+{% set mode = 'highlight' %}
+{% set aria_label = 'Fretboard review. Note at fret ' ~ highlighted_fret ~ ' on string ' ~ string_number ~ '.' %}
+<div id="name-note-board" class="name-note-board name-note-board-review">
+  {% include "exercises/_fretboard.html" %}
+
+  <div class="find-note-feedback {{ 'correct' if correct else 'incorrect' }}" aria-live="polite">
+    {% if correct %}
+      <span class="answer-feedback">✓ Correct: {{ expected_note.value }}</span>
+      <span class="next-chord-hint">Next question coming up…</span>
+      <a class="new-chord" href="/exercises/name-note">Next question</a>
+      <script>
+        (function () {
+          if (window.GuitarExercises && typeof window.GuitarExercises.advanceTo === 'function') {
+            const fallback = document.currentScript.previousElementSibling;
+            if (fallback) fallback.hidden = true;
+            window.GuitarExercises.advanceTo('/exercises/name-note');
+          }
+        })();
+      </script>
+    {% else %}
+      <span class="answer-feedback">✗ You said {{ guess }} — the note is {{ expected_note.value }}</span>
+      <a class="new-chord" href="/exercises/name-note">New question</a>
+    {% endif %}
+  </div>
+</div>
