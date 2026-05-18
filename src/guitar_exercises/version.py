@@ -18,7 +18,7 @@ def _resolve_commit() -> str:
             check=True,
             timeout=2,
         )
-    except (subprocess.SubprocessError, FileNotFoundError, OSError):
+    except subprocess.SubprocessError, FileNotFoundError, OSError:
         return "dev"
     return result.stdout.strip() or "dev"
 
