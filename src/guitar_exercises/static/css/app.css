@@ -745,9 +745,9 @@ body {
   width: 100%;
 }
 
-/* Fretboard grid: [string-label] + 13 fret cells (0..12) ----- */
+/* Fretboard grid: [string-label] + 18 fret cells (0..17) ----- */
 .fretboard {
-  --fret-cols: 13;
+  --fret-cols: 18;
   display: grid;
   grid-template-columns: 3rem repeat(var(--fret-cols), 1fr);
   gap: 0;

@@ -18,17 +18,17 @@ from guitar_exercises.domain.tuning import STANDARD_TUNING
     ("string_number", "target_note", "expected"),
     [
         (6, Note.E, (0, 12)),
-        (6, Note.F, (1,)),
+        (6, Note.F, (1, 13)),
         (5, Note.A, (0, 12)),
         (5, Note.G, (10,)),
         (4, Note.D, (0, 12)),
-        (4, Note.E, (2,)),
+        (4, Note.E, (2, 14)),
         (3, Note.G, (0, 12)),
-        (3, Note.A, (2,)),
+        (3, Note.A, (2, 14)),
         (2, Note.B, (0, 12)),
-        (2, Note.C, (1,)),
+        (2, Note.C, (1, 13)),
         (1, Note.E, (0, 12)),
-        (1, Note.G, (3,)),
+        (1, Note.G, (3, 15)),
     ],
 )
 def test_find_frets_for_note_known_anchors(
