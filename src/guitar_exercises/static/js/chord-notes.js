@@ -70,14 +70,25 @@
     next.focus();
   });
 
+  function anyIncorrect() {
+    return stringList.querySelector(".string-row-incorrect") !== null;
+  }
+
   // After an htmx swap turns a row into its answered state, unlock the next
-  // playable string (or the "New chord" link if there are no more).
+  // playable string. When every playable string has been answered: if they
+  // were all correct, auto-advance to the next chord using the shared
+  // delay; otherwise let the user click "New chord" so they can review the
+  // mistakes.
   document.body.addEventListener("htmx:afterSwap", function (event) {
     const target = event.target;
     if (!target || !target.classList || !target.classList.contains("string-row")) return;
     const next = firstPlayableAfter(target);
     if (next) {
       activate(next, true);
+      return;
+    }
+    if (!anyIncorrect() && window.GuitarExercises && window.GuitarExercises.advanceTo) {
+      window.GuitarExercises.advanceTo("/exercises/chord-notes");
       return;
     }
     const newChord = document.querySelector("a.new-chord");

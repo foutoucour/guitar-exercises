@@ -2,7 +2,7 @@
   {% if correct %}
     <span class="answer-feedback">✓ Correct: {{ expected_name }}</span>
     <span class="next-chord-hint" aria-live="polite">Next chord coming up…</span>
-    <script>setTimeout(function () { window.location.assign('/exercises/chord-name'); }, 1200);</script>
+    <script>window.GuitarExercises.advanceTo('/exercises/chord-name');</script>
   {% else %}
     <span class="answer-feedback">✗ You said {{ guess }} — the chord is {{ expected_name }}</span>
     <a class="new-chord" href="/exercises/chord-name">New chord</a>
