@@ -26,7 +26,7 @@ class Timing:
 
 
 def parse_timings(cookie_value: str | None) -> list[Timing]:
-    """Decode a comma-joined cookie into an ordered list of timings.
+    """Decode a pipe-joined cookie into an ordered list of timings.
 
     Most recent first, capped at :data:`TIMINGS_WINDOW`. Malformed entries are
     silently skipped — the cookie is user-controlled, so we accept best-effort.

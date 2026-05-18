@@ -113,7 +113,6 @@ def _set_timings_cookie(
     response.set_cookie(
         key=timings_cookie,
         value=serialize_timings(updated),
-        max_age=_RECENT_COOKIE_MAX_AGE,
         path="/exercises",
         httponly=True,
         samesite="lax",
@@ -123,7 +122,6 @@ def _set_timings_cookie(
         response.set_cookie(
             key=best_streak_cookie,
             value=str(new_best),
-            max_age=_RECENT_COOKIE_MAX_AGE,
             path="/exercises",
             httponly=True,
             samesite="lax",

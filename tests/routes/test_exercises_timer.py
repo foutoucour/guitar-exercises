@@ -1,12 +1,13 @@
 """Integration tests for the per-answer timer + history-cookie flow."""
 
 import random
+import re
 from collections.abc import Iterator
 
 import pytest
 from fastapi.testclient import TestClient
 
-from guitar_exercises.domain.chords import CHORDS, get_chord_by_id
+from guitar_exercises.domain.chords import get_chord_by_id
 from guitar_exercises.domain.find_note import MAX_FRET
 from guitar_exercises.domain.name_note import NameNoteQuestion
 from guitar_exercises.domain.notes import Note
@@ -158,7 +159,9 @@ def test_name_note_timing_cookie_caps_at_window(
 
 def test_chord_name_records_timing_with_elapsed(seeded_client: TestClient) -> None:
     page = seeded_client.get("/exercises/chord-name").text
-    chord_id = next(c.id for c in CHORDS if c.id in page)
+    chord_match = re.search(r'name="chord_id" value="([^"]+)"', page)
+    assert chord_match is not None, "no chord_id input found"
+    chord_id = chord_match.group(1)
     chord = get_chord_by_id(chord_id)
     assert chord is not None
 

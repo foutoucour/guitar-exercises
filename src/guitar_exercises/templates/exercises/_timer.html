@@ -2,8 +2,8 @@
    - JS (static/js/timer.js): keeps `.exercise-timer-live` ticking and injects
      `elapsed_ms` into every HTMX form submission via htmx:configRequest.
    - Server (routes/exercises.py): renders the chip row, current streak,
-     best streak, and average from the per-exercise timings cookie.
-   Hidden entirely until at least one timing has been recorded. #}
+      best streak, and average from the per-exercise timings cookie.
+   Always shows the live timer; streak/avg/history appear after first timing. #}
 {% set t = timer %}
 <aside class="exercise-timer"
        data-timer-root="1"
