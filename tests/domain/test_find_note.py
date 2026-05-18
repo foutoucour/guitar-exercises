@@ -6,10 +6,12 @@ from guitar_exercises.domain.find_note import (
     MAX_FRET,
     FindNoteQuestion,
     find_frets_for_note,
+    find_note_question_key,
     is_correct_fret,
     pick_find_note_question,
 )
 from guitar_exercises.domain.notes import CHROMATIC, Note
+from guitar_exercises.domain.tuning import STANDARD_TUNING
 
 
 @pytest.mark.parametrize(
@@ -82,3 +84,24 @@ def test_pick_find_note_question_is_deterministic_for_same_seed() -> None:
     first = pick_find_note_question(random.Random(1234))
     second = pick_find_note_question(random.Random(1234))
     assert first == second
+
+
+def test_pick_find_note_question_excludes_given_keys() -> None:
+    # Build an exclude set covering every (string, note) except one — the
+    # picker must return that one survivor.
+    target = FindNoteQuestion(string_number=3, target_note=Note.E)
+    survivor_key = find_note_question_key(target)
+    exclude = {
+        f"{s}:{n.value}"
+        for s in sorted(STANDARD_TUNING)
+        for n in CHROMATIC
+        if f"{s}:{n.value}" != survivor_key
+    }
+    picked = pick_find_note_question(random.Random(0), exclude_keys=exclude)
+    assert picked == target
+
+
+def test_pick_find_note_question_falls_back_when_all_excluded() -> None:
+    exclude = {f"{s}:{n.value}" for s in sorted(STANDARD_TUNING) for n in CHROMATIC}
+    picked = pick_find_note_question(random.Random(0), exclude_keys=exclude)
+    assert find_note_question_key(picked) in exclude

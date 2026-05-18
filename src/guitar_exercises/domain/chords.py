@@ -1,5 +1,6 @@
 import random
 import re
+from collections.abc import Collection
 from enum import StrEnum
 from importlib import resources
 from typing import Annotated, Self
@@ -125,8 +126,23 @@ CHORDS: tuple[Chord, ...] = _load_chords_from_yaml()
 _CHORDS_BY_ID: dict[str, Chord] = {chord.id: chord for chord in CHORDS}
 
 
-def pick_chord(rng: random.Random) -> Chord:
-    return rng.choice(CHORDS)
+def pick_chord(rng: random.Random, exclude_keys: Collection[str] = ()) -> Chord:
+    """Pick a chord, avoiding any chord whose id is in ``exclude_keys``.
+
+    Falls back to the full catalog if every chord is excluded — exclusions
+    are a preference, never a deadlock.
+    """
+    if not exclude_keys:
+        return rng.choice(CHORDS)
+    excluded = set(exclude_keys)
+    available = [chord for chord in CHORDS if chord.id not in excluded]
+    if not available:
+        available = list(CHORDS)
+    return rng.choice(available)
+
+
+def chord_question_key(chord: Chord) -> str:
+    return chord.id
 
 
 def get_chord_by_id(chord_id: str) -> Chord | None:

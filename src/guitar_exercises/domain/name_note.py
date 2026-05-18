@@ -1,4 +1,5 @@
 import random
+from collections.abc import Collection
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -16,11 +17,37 @@ class NameNoteQuestion(BaseModel):
     expected_note: Note
 
 
-def pick_name_note_question(rng: random.Random) -> NameNoteQuestion:
-    string_number = rng.choice(sorted(STANDARD_TUNING))
-    fret = rng.randint(0, MAX_FRET)
-    return NameNoteQuestion(
-        string_number=string_number,
-        fret=fret,
-        expected_note=note_for_string(string_number, fret),
+def name_note_question_key(question: NameNoteQuestion) -> str:
+    return f"{question.string_number}:{question.fret}"
+
+
+def _all_name_note_questions() -> tuple[NameNoteQuestion, ...]:
+    return tuple(
+        NameNoteQuestion(
+            string_number=string_number,
+            fret=fret,
+            expected_note=note_for_string(string_number, fret),
+        )
+        for string_number in sorted(STANDARD_TUNING)
+        for fret in range(MAX_FRET + 1)
     )
+
+
+_NAME_NOTE_POOL: tuple[NameNoteQuestion, ...] = _all_name_note_questions()
+
+
+def pick_name_note_question(
+    rng: random.Random,
+    exclude_keys: Collection[str] = (),
+) -> NameNoteQuestion:
+    """Pick a (string, fret) question, avoiding ``exclude_keys``.
+
+    Falls back to the full pool if every question is excluded.
+    """
+    if not exclude_keys:
+        return rng.choice(_NAME_NOTE_POOL)
+    excluded = set(exclude_keys)
+    available = [q for q in _NAME_NOTE_POOL if name_note_question_key(q) not in excluded]
+    if not available:
+        available = list(_NAME_NOTE_POOL)
+    return rng.choice(available)

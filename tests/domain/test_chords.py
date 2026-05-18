@@ -131,6 +131,20 @@ def test_pick_chord_is_deterministic_with_seed() -> None:
     assert pick_chord(rng_a).id == pick_chord(rng_b).id
 
 
+def test_pick_chord_excludes_given_keys() -> None:
+    exclude = {c.id for c in CHORDS if c.id != "a_major"}
+    rng = random.Random(0)
+    assert pick_chord(rng, exclude_keys=exclude).id == "a_major"
+
+
+def test_pick_chord_falls_back_when_all_excluded() -> None:
+    # When every chord is excluded the picker must still return something —
+    # otherwise the route would have no chord to render.
+    exclude = {c.id for c in CHORDS}
+    picked = pick_chord(random.Random(0), exclude_keys=exclude)
+    assert picked.id in exclude
+
+
 def test_get_chord_by_id_returns_known_chord() -> None:
     chord = get_chord_by_id("a_major")
     assert chord is not None
