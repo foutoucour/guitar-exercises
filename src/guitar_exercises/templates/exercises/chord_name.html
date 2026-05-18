@@ -17,7 +17,7 @@
       class="chord-guess-form"
       hx-post="/exercises/chord-name/check"
       hx-target="#chord-guess"
-      hx-swap="innerHTML"
+      hx-swap="outerHTML"
     >
       <input type="hidden" name="chord_id" value="{{ chord.id }}">
       <label for="chord-guess-input" class="sr-only">Chord name</label>

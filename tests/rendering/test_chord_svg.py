@@ -86,6 +86,25 @@ def test_render_open_window_omits_fret_label() -> None:
     assert "chord-fret-label" not in svg
 
 
+def test_render_open_chord_with_high_frets_omits_fret_label() -> None:
+    """Open chords (e.g. G major, frets 2 and 3) must not get an 'Nfr' label even though
+    their lowest fretted note is above fret 1 — the open strings anchor the diagram to fret 1."""
+    chord = get_chord_by_id("g_major")
+    assert chord is not None
+    svg = render_chord_svg(chord)
+    assert "chord-fret-label" not in svg
+
+
+def test_render_closed_shape_on_second_fret_shows_fret_label() -> None:
+    """Fully-fretted shapes (no open strings) with lowest fret > 1 should display an 'Nfr'
+    marker — e.g. B major barres from fret 2."""
+    chord = get_chord_by_id("b_major")
+    assert chord is not None
+    svg = render_chord_svg(chord)
+    assert "chord-fret-label" in svg
+    assert ">2fr<" in svg
+
+
 def test_render_higher_position_shape_includes_fret_label() -> None:
     """Shapes whose lowest fret is above the open window should display an 'Nfr' marker
     so the player knows where on the neck to position their hand."""
