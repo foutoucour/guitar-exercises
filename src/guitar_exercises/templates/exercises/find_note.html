@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Find {{ target_note.value }} on string {{ string_number }}{% endblock %}
+{% block content %}
+<section class="exercise exercise--find-note">
+  <header class="exercise-header">
+    <p class="exercise-eyebrow">Find the note</p>
+    <h1 class="chord-name">
+      Find <span class="find-note-target">{{ target_note.value }}</span>
+      on string <span class="find-note-target">{{ string_number }}</span>
+    </h1>
+  </header>
+
+  <div id="find-note-board" class="find-note-board">
+    <form
+      class="find-note-form"
+      hx-post="/exercises/find-note/check"
+      hx-target="#find-note-board"
+      hx-swap="outerHTML"
+    >
+      <input type="hidden" name="string_number" value="{{ string_number }}">
+      <input type="hidden" name="target_note" value="{{ target_note.value }}">
+      {% set mode = 'interactive' %}
+      {% set aria_label = 'Fretboard. Find ' ~ target_note.value ~ ' on string ' ~ string_number ~ '.' %}
+      {% include "exercises/_fretboard.html" %}
+    </form>
+  </div>
+</section>
+{% endblock %}

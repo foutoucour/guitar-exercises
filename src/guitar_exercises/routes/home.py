@@ -43,6 +43,28 @@ EXERCISES: list[ExerciseListing] = [
         icon="🎸",
         icon_label="Guitar — name the chord from its shape",
     ),
+    ExerciseListing(
+        slug="find-note",
+        name="Find the Note",
+        description=(
+            "A string and a target note are given. "
+            "Click the fret on the fretboard where that note lives."
+        ),
+        url="/exercises/find-note",
+        icon="🎯",
+        icon_label="Target — find the note on the fretboard",
+    ),
+    ExerciseListing(
+        slug="name-note",
+        name="Name the Note",
+        description=(
+            "A fret on the fretboard is marked. "
+            "Pick the note it produces from the chip list."
+        ),
+        url="/exercises/name-note",
+        icon="🎼",
+        icon_label="Musical score — name the highlighted fret",
+    ),
 ]
 
 

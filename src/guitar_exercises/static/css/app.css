@@ -708,3 +708,307 @@ body {
     gap: var(--space-4);
   }
 }
+
+/* =========================================================
+   Find-the-Note exercise — horizontal fretboard
+   ========================================================= */
+.exercise--find-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.find-note-target {
+  color: var(--md-sys-color-accent);
+  font-style: normal;
+  font-weight: 700;
+  padding: 0 var(--space-1);
+}
+
+.find-note-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.find-note-form {
+  margin: 0;
+  width: 100%;
+}
+
+/* Fretboard grid: [string-label] + 13 fret cells (0..12) ----- */
+.fretboard {
+  --fret-cols: 13;
+  display: grid;
+  grid-template-columns: 3rem repeat(var(--fret-cols), 1fr);
+  gap: 0;
+  background:
+    linear-gradient(180deg, #2b1d0a 0%, #170e04 100%);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-md);
+  padding: var(--space-2) 0;
+  box-shadow: var(--md-sys-elevation-2);
+  overflow: hidden;
+}
+
+.fretboard-fret-label {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+  text-align: center;
+  padding-bottom: var(--space-1);
+  opacity: 0.7;
+}
+
+.fretboard-fret-label:first-child {
+  visibility: hidden;
+}
+
+.fretboard-string-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 2.25rem;
+  padding-right: var(--space-2);
+  border-right: 2px solid var(--md-sys-color-outline);
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.fretboard-string-num {
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: var(--md-sys-color-secondary);
+  letter-spacing: 0.04em;
+}
+
+.fretboard-string-open {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-primary);
+}
+
+.fretboard-string-label-target {
+  background: var(--md-sys-color-accent-container);
+}
+
+.fretboard-string-label-target .fretboard-string-num,
+.fretboard-string-label-target .fretboard-string-open {
+  color: var(--md-sys-color-on-accent-container);
+}
+
+/* Fret cell — base. The horizontal "string" line is drawn as a thin
+   line across the center; vertical fret wires are cell left borders. */
+.fretboard-cell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-label-small);
+  cursor: default;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+}
+
+/* Horizontal string line — same shade for every row. */
+.fretboard-cell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--md-sys-color-outline);
+  transform: translateY(-0.5px);
+  pointer-events: none;
+}
+
+/* Open-string column — visually distinct (no fret wire to its left, no
+   string line continuation past the nut). */
+.fretboard-cell-open {
+  border-left: none;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* The "nut" is the heavy line between fret 0 and fret 1. */
+.fretboard-cell-nut {
+  border-left: 4px solid var(--md-sys-color-primary);
+}
+
+.fretboard-cell-target {
+  background: rgba(79, 209, 197, 0.06);
+}
+
+.fretboard-cell-target.fretboard-cell-open {
+  background: rgba(79, 209, 197, 0.12);
+}
+
+/* Interactive clickable cell on the target string. */
+button.fretboard-cell {
+  cursor: pointer;
+  color: var(--md-sys-color-on-surface);
+  transition:
+    background var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+button.fretboard-cell .fretboard-cell-fret-num {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.6;
+}
+
+button.fretboard-cell:hover {
+  background: var(--md-sys-color-accent-container);
+}
+
+button.fretboard-cell:hover .fretboard-cell-fret-num {
+  color: var(--md-sys-color-on-accent-container);
+  opacity: 1;
+}
+
+button.fretboard-cell:focus-visible {
+  outline: none;
+  background: var(--md-sys-color-accent);
+  box-shadow: inset 0 0 0 2px var(--md-sys-color-on-accent);
+}
+
+button.fretboard-cell:focus-visible .fretboard-cell-fret-num {
+  color: var(--md-sys-color-on-accent);
+  opacity: 1;
+}
+
+button.fretboard-cell:active {
+  background: var(--md-sys-color-accent);
+}
+
+/* Review state — clicked cells and reveals. */
+.fretboard-cell-mark {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.fretboard-cell-clicked-correct {
+  background: var(--md-sys-color-success);
+}
+.fretboard-cell-clicked-correct .fretboard-cell-mark {
+  color: #0e1a0a;
+}
+
+.fretboard-cell-clicked-wrong {
+  background: var(--md-sys-color-error);
+}
+.fretboard-cell-clicked-wrong .fretboard-cell-mark {
+  color: var(--md-sys-color-on-error);
+}
+
+.fretboard-cell-reveal {
+  background: var(--md-sys-color-accent-container);
+}
+.fretboard-cell-reveal .fretboard-cell-mark {
+  color: var(--md-sys-color-accent);
+  font-size: 1.4rem;
+}
+
+/* Highlight mode — the system marks one fret and the user must name it. */
+.fretboard-cell-highlight {
+  background: var(--md-sys-color-accent);
+}
+.fretboard-cell-highlight .fretboard-cell-mark {
+  color: var(--md-sys-color-on-accent);
+  font-size: 1.4rem;
+}
+
+/* Inlay-dot row at the bottom. */
+.fretboard-dot-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-top: var(--space-1);
+  height: 1rem;
+}
+
+.fretboard-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--md-sys-color-tertiary);
+  opacity: 0.6;
+}
+
+/* Feedback banner inside the board (review state). */
+.find-note-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--md-sys-shape-corner-md);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container);
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.find-note-feedback.correct {
+  border-color: var(--md-sys-color-success);
+  background: linear-gradient(180deg, #1a2715 0%, #0e1a0a 100%);
+}
+.find-note-feedback.correct .answer-feedback { color: var(--md-sys-color-success); }
+
+.find-note-feedback.incorrect {
+  border-color: var(--md-sys-color-error);
+  background: var(--md-sys-color-error-container);
+}
+.find-note-feedback.incorrect .answer-feedback { color: var(--md-sys-color-error); }
+
+@media (min-width: 720px) {
+  .exercise--find-note,
+  .exercise--name-note { gap: var(--space-5); }
+  .fretboard { padding: var(--space-3) 0; }
+  .fretboard-cell,
+  .fretboard-string-label { height: 2.5rem; }
+}
+
+/* =========================================================
+   Name-the-Note exercise — fretboard above, chip group below
+   ========================================================= */
+.exercise--name-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.name-note-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.name-note-form {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.name-note-form .note-chips {
+  justify-content: center;
+}

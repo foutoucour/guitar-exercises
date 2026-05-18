@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Name this note{% endblock %}
+{% block content %}
+<section class="exercise exercise--name-note">
+  <header class="exercise-header">
+    <p class="exercise-eyebrow">Name the note</p>
+    <h1 class="chord-name">
+      What note is at fret <span class="find-note-target">{{ highlighted_fret }}</span>
+      on string <span class="find-note-target">{{ string_number }}</span>?
+    </h1>
+  </header>
+
+  <div id="name-note-board" class="name-note-board">
+    {% set mode = 'highlight' %}
+    {% set aria_label = 'Fretboard. Name the note at fret ' ~ highlighted_fret ~ ' on string ' ~ string_number ~ '.' %}
+    {% include "exercises/_fretboard.html" %}
+
+    <form
+      class="name-note-form"
+      hx-post="/exercises/name-note/check"
+      hx-target="#name-note-board"
+      hx-swap="outerHTML"
+    >
+      <input type="hidden" name="string_number" value="{{ string_number }}">
+      <input type="hidden" name="fret" value="{{ highlighted_fret }}">
+      <div class="note-chips" role="group" aria-label="Pick the note">
+        {% for note in notes %}
+          <button
+            type="submit"
+            name="guess"
+            value="{{ note.value }}"
+            class="note-chip"
+          >{{ note.value }}</button>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
