@@ -117,11 +117,7 @@ def _find_barres(chord: Chord) -> list[tuple[int, int, int]]:
     """
     by_key: dict[tuple[int, int], list[int]] = {}
     for index, spec in enumerate(chord.strings):
-        if (
-            spec.state is StringState.FRETTED
-            and spec.fret is not None
-            and spec.finger is not None
-        ):
+        if spec.state is StringState.FRETTED and spec.fret is not None and spec.finger is not None:
             by_key.setdefault((spec.finger, spec.fret), []).append(index)
     return [
         (fret, min(indices), max(indices))
@@ -177,8 +173,7 @@ def render_chord_svg(chord: Chord, *, reveal_name: bool = True) -> str:
 
     markers = [_render_marker(spec, i, start_fret) for i, spec in enumerate(chord.strings)]
     barres = [
-        _render_barre(fret, left, right, start_fret)
-        for fret, left, right in _find_barres(chord)
+        _render_barre(fret, left, right, start_fret) for fret, left, right in _find_barres(chord)
     ]
     dots = [_render_dot(spec, i, start_fret) for i, spec in enumerate(chord.strings)]
     fingers = [_render_finger(spec, i) for i, spec in enumerate(chord.strings)]
@@ -203,8 +198,8 @@ def render_chord_svg(chord: Chord, *, reveal_name: bool = True) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'viewBox="0 0 {_VIEWBOX_WIDTH} {_VIEWBOX_HEIGHT}" '
         f'class="chord-diagram" role="img" aria-labelledby="chord-title chord-desc">\n'
-        f"  <title id=\"chord-title\">{title}</title>\n"
-        f"  <desc id=\"chord-desc\">{desc}</desc>\n"
+        f'  <title id="chord-title">{title}</title>\n'
+        f'  <desc id="chord-desc">{desc}</desc>\n'
         f"  {body}\n"
         f"</svg>"
     )

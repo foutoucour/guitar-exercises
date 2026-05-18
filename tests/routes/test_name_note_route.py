@@ -26,9 +26,7 @@ def pinned_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
         fret=5,
         expected_note=Note.A,
     )
-    monkeypatch.setattr(
-        exercises_module, "pick_name_note_question", lambda *_a, **_kw: pinned
-    )
+    monkeypatch.setattr(exercises_module, "pick_name_note_question", lambda *_a, **_kw: pinned)
     return TestClient(create_app())
 
 

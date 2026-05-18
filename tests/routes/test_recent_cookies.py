@@ -38,9 +38,7 @@ EXERCISES = [
 
 
 @pytest.mark.parametrize(("path", "cookie", "_pool"), EXERCISES)
-def test_get_sets_recent_cookie(
-    client: TestClient, path: str, cookie: str, _pool: int
-) -> None:
+def test_get_sets_recent_cookie(client: TestClient, path: str, cookie: str, _pool: int) -> None:
     response = client.get(path)
     assert response.status_code == 200
     value = response.cookies.get(cookie)
@@ -48,9 +46,7 @@ def test_get_sets_recent_cookie(
 
 
 @pytest.mark.parametrize(("path", "cookie", "pool"), EXERCISES)
-def test_no_repeat_within_window(
-    client: TestClient, path: str, cookie: str, pool: int
-) -> None:
+def test_no_repeat_within_window(client: TestClient, path: str, cookie: str, pool: int) -> None:
     # Hit the endpoint up to ``min(pool, RECENT_WINDOW)`` times. While the
     # window can still hold every key, no question may repeat.
     rounds = min(pool, RECENT_WINDOW)
@@ -64,9 +60,7 @@ def test_no_repeat_within_window(
 
 
 @pytest.mark.parametrize(("path", "cookie", "_pool"), EXERCISES)
-def test_cookie_trims_to_window(
-    client: TestClient, path: str, cookie: str, _pool: int
-) -> None:
+def test_cookie_trims_to_window(client: TestClient, path: str, cookie: str, _pool: int) -> None:
     for _ in range(RECENT_WINDOW + 3):
         response = client.get(path)
         assert response.status_code == 200
@@ -86,6 +80,4 @@ def test_each_exercise_uses_an_independent_cookie(client: TestClient) -> None:
         client.cookies.clear()
         client.get(path)
         present = {c for c in expected_cookies if client.cookies.get(c) is not None}
-        assert present == {cookie}, (
-            f"{path} should only set {cookie}, got {present}"
-        )
+        assert present == {cookie}, f"{path} should only set {cookie}, got {present}"

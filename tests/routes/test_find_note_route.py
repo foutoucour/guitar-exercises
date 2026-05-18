@@ -26,9 +26,7 @@ def pinned_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
         string_number=5,
         target_note=Note.G,
     )
-    monkeypatch.setattr(
-        exercises_module, "pick_find_note_question", lambda *_a, **_kw: pinned
-    )
+    monkeypatch.setattr(exercises_module, "pick_find_note_question", lambda *_a, **_kw: pinned)
     return TestClient(create_app())
 
 
@@ -58,9 +56,7 @@ def test_get_find_note_renders_clickable_buttons_only_on_target_string(
     response = pinned_client.get("/exercises/find-note")
     body = response.text
     # 13 fret cells (0..12) on the target string should be submit buttons.
-    fret_values = re.findall(
-        r'name="fret"\s+value="(\d+)"', body, flags=re.DOTALL
-    )
+    fret_values = re.findall(r'name="fret"\s+value="(\d+)"', body, flags=re.DOTALL)
     assert sorted(int(v) for v in fret_values) == list(range(13))
 
 

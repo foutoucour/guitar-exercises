@@ -63,7 +63,9 @@ def test_render_escapes_chord_name() -> None:
         id="weird",
         name="<script>alert(1)</script>",
         strings=tuple(
-            StringSpec(string_number=n, state=StringState.OPEN) if n in {6, 5, 4, 3, 2, 1} else StringSpec(string_number=n, state=StringState.MUTED)
+            StringSpec(string_number=n, state=StringState.OPEN)
+            if n in {6, 5, 4, 3, 2, 1}
+            else StringSpec(string_number=n, state=StringState.MUTED)
             for n in (6, 5, 4, 3, 2, 1)
         ),
     )

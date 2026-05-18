@@ -64,9 +64,7 @@ def test_find_frets_for_note_rejects_invalid_string() -> None:
         (2, 1, Note.D, False),
     ],
 )
-def test_is_correct_fret(
-    string_number: int, fret: int, target_note: Note, expected: bool
-) -> None:
+def test_is_correct_fret(string_number: int, fret: int, target_note: Note, expected: bool) -> None:
     assert is_correct_fret(string_number, fret, target_note) is expected
 
 
