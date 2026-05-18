@@ -15,5 +15,12 @@
   {% else %}
     <span class="answer-feedback">✗ You said {{ guess }} — the chord is {{ expected_name }}</span>
     <a class="new-chord" href="/exercises/chord-name">New chord</a>
+    <script>
+      (function () {
+        if (window.GuitarExercises && typeof window.GuitarExercises.armKeyAdvance === 'function') {
+          window.GuitarExercises.armKeyAdvance('/exercises/chord-name');
+        }
+      })();
+    </script>
   {% endif %}
 </div>

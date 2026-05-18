@@ -99,6 +99,17 @@ def test_post_check_incorrect_keeps_manual_new_chord_link(client: TestClient) ->
     assert 'href="/exercises/chord-name"' in body
 
 
+def test_post_check_incorrect_arms_key_advance(client: TestClient) -> None:
+    # Keyboard players must be able to move on with Enter/Space without
+    # reaching for the mouse — the failure feedback arms a key listener.
+    response = client.post(
+        "/exercises/chord-name/check",
+        data={"chord_id": "a_major", "guess": "Bm"},
+    )
+    body = response.text
+    assert "window.GuitarExercises.armKeyAdvance('/exercises/chord-name')" in body
+
+
 def test_post_check_correct_alias_am(client: TestClient) -> None:
     response = client.post(
         "/exercises/chord-name/check",

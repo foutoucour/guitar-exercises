@@ -106,6 +106,17 @@ def test_post_incorrect_guess_reveals_expected_note(pinned_client: TestClient) -
     assert "the note is A" in body
 
 
+def test_post_incorrect_guess_arms_key_advance(pinned_client: TestClient) -> None:
+    # Keyboard players must be able to move on with Enter/Space without a
+    # mouse click — the failure feedback arms a one-shot key listener.
+    response = pinned_client.post(
+        "/exercises/name-note/check",
+        data={"string_number": 6, "fret": 5, "guess": "C"},
+    )
+    body = response.text
+    assert "GuitarExercises.armKeyAdvance('/exercises/name-note')" in body
+
+
 def test_post_check_normalizes_sharp_input(pinned_client: TestClient) -> None:
     # Fret 6 on string 6 is A# — accept the unicode sharp glyph.
     response = pinned_client.post(

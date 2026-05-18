@@ -20,6 +20,13 @@
     {% else %}
       <span class="answer-feedback">✗ You clicked fret {{ clicked_fret }} ({{ user_note }}) — {{ target_note.value }} is at fret {% for f in correct_frets %}{{ f }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
       <a class="new-chord" href="/exercises/find-note">New question</a>
+      <script>
+        (function () {
+          if (window.GuitarExercises && typeof window.GuitarExercises.armKeyAdvance === 'function') {
+            window.GuitarExercises.armKeyAdvance('/exercises/find-note');
+          }
+        })();
+      </script>
     {% endif %}
   </div>
 </div>
