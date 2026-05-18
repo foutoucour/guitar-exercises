@@ -22,9 +22,7 @@ def test_pick_name_note_question_returns_valid_question_for_any_seed() -> None:
         assert question.expected_note in CHROMATIC
         # The expected note must match the actual note at that fret —
         # otherwise the exercise would mark correct answers as wrong.
-        assert question.expected_note == note_for_string(
-            question.string_number, question.fret
-        )
+        assert question.expected_note == note_for_string(question.string_number, question.fret)
 
 
 def test_pick_name_note_question_is_deterministic_for_same_seed() -> None:

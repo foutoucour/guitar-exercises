@@ -58,8 +58,7 @@ EXERCISES: list[ExerciseListing] = [
         slug="name-note",
         name="Name the Note",
         description=(
-            "A fret on the fretboard is marked. "
-            "Pick the note it produces from the chip list."
+            "A fret on the fretboard is marked. Pick the note it produces from the chip list."
         ),
         url="/exercises/name-note",
         icon="🎼",

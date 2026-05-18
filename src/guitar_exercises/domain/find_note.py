@@ -21,9 +21,7 @@ def find_frets_for_note(string_number: int, target_note: Note) -> tuple[int, ...
     if string_number not in STANDARD_TUNING:
         raise ValueError(f"string_number must be 1..6, got {string_number}")
     return tuple(
-        fret
-        for fret in range(MAX_FRET + 1)
-        if note_for_string(string_number, fret) == target_note
+        fret for fret in range(MAX_FRET + 1) if note_for_string(string_number, fret) == target_note
     )
 
 

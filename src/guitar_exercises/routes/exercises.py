@@ -195,9 +195,7 @@ async def find_note_page(
             "target_note": question.target_note,
         },
     )
-    _set_recent_cookie(
-        response, RECENT_COOKIE_FIND_NOTE, recent, find_note_question_key(question)
-    )
+    _set_recent_cookie(response, RECENT_COOKIE_FIND_NOTE, recent, find_note_question_key(question))
     return response
 
 
@@ -253,9 +251,7 @@ async def name_note_page(
             "notes": list(CHROMATIC),
         },
     )
-    _set_recent_cookie(
-        response, RECENT_COOKIE_NAME_NOTE, recent, name_note_question_key(question)
-    )
+    _set_recent_cookie(response, RECENT_COOKIE_NAME_NOTE, recent, name_note_question_key(question))
     return response
 
 
