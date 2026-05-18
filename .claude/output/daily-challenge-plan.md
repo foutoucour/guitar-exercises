@@ -7,7 +7,7 @@ Guitar-exercises FastAPI app is currently stateless (in-memory chord YAML, no DB
 This requires three foundational pieces the project doesn't yet have:
 1. **Persistence** — Postgres + SQLAlchemy 2.0 async + Alembic (user identity, attempts, streaks).
 2. **Authentication** — Google + GitHub OAuth via Authlib + Starlette `SessionMiddleware`.
-3. **Exercise registry** — small refactor of the existing 2 routes so each exercise type registers a `generate / check / template` triple that the daily-challenge engine iterates over.
+3. **Exercise registry** — small refactor of the existing 8 exercise endpoints (4 exercise GET pages + 4 `/check` POST handlers), treating each GET+POST pair as one exercise flow that registers a `generate / check / template` triple for the daily-challenge engine.
 
 End outcome: a logged-in user lands on `/daily`, plays one question per registered exercise type sequentially, gets a final score, and a streak counter that increments only when consecutive UTC days are completed.
 
@@ -16,8 +16,8 @@ End outcome: a logged-in user lands on `/daily`, plays one question per register
 ## Architecture decisions
 
 - **DB**: Postgres in `docker-compose.yml`; SQLAlchemy 2.0 async + `asyncpg`; Alembic for migrations.
-- **Auth**: Authlib OAuth (`google`, `github`); session stored via Starlette `SessionMiddleware` (cookie, signed with `itsdangerous`). No JWT, no separate auth service — server-side session keyed by user id.
-- **Seed**: `date.today()` in UTC, ISO-format hashed to an `int` → seeded `random.Random` instance used to pick exercise material. Same date → same questions globally.
+- **Auth**: Authlib OAuth (`google`, `github`); cookie-backed session via Starlette `SessionMiddleware` (signed with `itsdangerous`). In production set explicit secure flags (`https_only=True`, `same_site="lax"`, bounded `max_age`) and keep session payload minimal (`user_id` plus short-lived OAuth state/nonce only). No JWT, no separate auth service.
+- **Seed**: derive challenge date from `datetime.now(timezone.utc).date()`, ISO-format hashed to an `int` → seeded `random.Random` instance used to pick exercise material. Same UTC date → same questions globally.
 - **Registry**: each `ExerciseType` exposes `slug`, `generate(rng) -> dict`, `check_answer(question, guess) -> bool`, `question_template`. The daily engine just enumerates `EXERCISE_REGISTRY` in fixed order.
 - **Day boundary**: UTC midnight, hard-coded (no per-user TZ).
 - **Sequential UX**: one question per page, HTMX-style feedback fragment (matches existing `/exercises/*/check` pattern), then "Next" link advances to next slug. After last slug → `/daily/summary`.
@@ -57,7 +57,7 @@ End outcome: a logged-in user lands on `/daily`, plays one question per register
 | `src/guitar_exercises/routes/home.py` | Add "Daily Challenge" card + login/logout button using `current_user` from session |
 | `src/guitar_exercises/templates/base.html` | Top-right login/logout + streak badge for logged-in users |
 | `docker-compose.yml` | Add `postgres:16` service + volume, wire `GUITAR_DATABASE_URL` |
-| `Makefile` (if present) | Add `make migrate`, `make db-up` |
+| `Makefile` | Add `db-up` + `migrate` targets that align with existing `dev/test/lint/check` naming style |
 
 ---
 
@@ -66,7 +66,7 @@ End outcome: a logged-in user lands on `/daily`, plays one question per register
 ```
 User
   id              uuid PK
-  email           text unique not null
+  email           text unique null
   name            text
   provider        text not null   -- 'google' | 'github'
   provider_sub    text not null   -- provider's user id
@@ -93,6 +93,8 @@ DailyAnswer
   correct         bool not null
   unique(attempt_id, exercise_slug)
 ```
+
+`(provider, provider_sub)` is the canonical identity key. `email` is optional because some GitHub OAuth accounts do not return a usable email without extra scopes/API calls.
 
 ---
 
