@@ -25,7 +25,6 @@ def pinned_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     pinned = FindNoteQuestion(
         string_number=5,
         target_note=Note.G,
-        correct_frets=(10,),
     )
     monkeypatch.setattr(
         exercises_module, "pick_find_note_question", lambda _rng: pinned
@@ -138,6 +137,14 @@ def test_correct_feedback_includes_auto_advance_script(seeded_client: TestClient
         data={"string_number": 5, "target_note": "G", "fret": 10},
     )
     assert "GuitarExercises.advanceTo" in response.text
+
+
+def test_correct_feedback_includes_manual_next_link_fallback(seeded_client: TestClient) -> None:
+    response = seeded_client.post(
+        "/exercises/find-note/check",
+        data={"string_number": 5, "target_note": "G", "fret": 10},
+    )
+    assert 'href="/exercises/find-note"' in response.text
 
 
 def test_home_lists_find_note_exercise() -> None:

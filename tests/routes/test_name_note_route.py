@@ -88,6 +88,16 @@ def test_post_correct_guess_includes_auto_advance(pinned_client: TestClient) -> 
     assert "GuitarExercises.advanceTo" in response.text
 
 
+def test_post_correct_guess_includes_manual_next_link_fallback(
+    pinned_client: TestClient,
+) -> None:
+    response = pinned_client.post(
+        "/exercises/name-note/check",
+        data={"string_number": 6, "fret": 5, "guess": "A"},
+    )
+    assert 'href="/exercises/name-note"' in response.text
+
+
 def test_post_incorrect_guess_reveals_expected_note(pinned_client: TestClient) -> None:
     response = pinned_client.post(
         "/exercises/name-note/check",
@@ -120,6 +130,16 @@ def test_post_check_invalid_string_returns_422(seeded_client: TestClient) -> Non
     response = seeded_client.post(
         "/exercises/name-note/check",
         data={"string_number": 0, "fret": 5, "guess": "A"},
+    )
+    assert response.status_code == 422
+
+
+def test_post_check_guess_longer_than_two_characters_returns_422(
+    seeded_client: TestClient,
+) -> None:
+    response = seeded_client.post(
+        "/exercises/name-note/check",
+        data={"string_number": 5, "fret": 2, "guess": "AAAA"},
     )
     assert response.status_code == 422
 

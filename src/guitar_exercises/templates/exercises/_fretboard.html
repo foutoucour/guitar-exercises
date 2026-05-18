@@ -10,7 +10,7 @@
      aria_label     — accessibility label for the fretboard grid
 
    Mode-specific context:
-     interactive: target_note (so the aria label can name what to find);
+     interactive: target_note (optional; used in each target button aria label);
                   the target-string cells are rendered as <button> submits.
      review:      correct_frets (iterable of frets matching target_note),
                   clicked_fret (the fret the user picked), target_note.
@@ -52,7 +52,7 @@
           name="fret"
           value="{{ fret }}"
           class="{{ cell_classes }}"
-          aria-label="String {{ s }} fret {{ fret }}"
+          aria-label="{% if target_note is defined %}Find {{ target_note.value }}: {% endif %}String {{ s }} fret {{ fret }}"
         ><span class="fretboard-cell-fret-num">{{ fret }}</span></button>
       {% else %}
         <div class="{{ cell_classes }}" aria-hidden="true">
@@ -69,9 +69,9 @@
   <div class="fretboard-dot-cell"></div>
   {% for fret in fret_range %}
     <div class="fretboard-dot-cell">
-      {% if fret in [3, 5, 7, 9] %}
+      {% if fret > 0 and fret % 12 in [3, 5, 7, 9] %}
         <span class="fretboard-dot"></span>
-      {% elif fret == 12 %}
+      {% elif fret > 0 and fret % 12 == 0 %}
         <span class="fretboard-dot"></span>
         <span class="fretboard-dot"></span>
       {% endif %}

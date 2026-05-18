@@ -147,7 +147,6 @@ async def find_note_page(
         {
             **context,
             "target_note": question.target_note,
-            "correct_frets": list(question.correct_frets),
         },
     )
 
@@ -167,7 +166,7 @@ async def find_note_check(
 
     correct_frets = find_frets_for_note(string_number, note)
     correct = fret in correct_frets
-    user_note = note_for_string(string_number, fret)
+    user_note = note_for_string(string_number, fret) if not correct else None
 
     context = _fretboard_context(string_number)
     return templates.TemplateResponse(
@@ -178,7 +177,7 @@ async def find_note_check(
             "target_note": note,
             "correct_frets": list(correct_frets),
             "clicked_fret": fret,
-            "user_note": user_note.value,
+            "user_note": user_note.value if user_note is not None else "",
             "correct": correct,
         },
     )
@@ -210,7 +209,7 @@ async def name_note_check(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     string_number: Annotated[int, Form(ge=1, le=6)],
     fret: Annotated[int, Form(ge=0, le=MAX_FRET)],
-    guess: Annotated[str, Form(min_length=1, max_length=4)],
+    guess: Annotated[str, Form(min_length=1, max_length=2)],
 ) -> HTMLResponse:
     expected = note_for_string(string_number, fret)
     correct = is_correct_guess(guess, expected)

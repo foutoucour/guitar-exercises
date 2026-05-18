@@ -14,7 +14,6 @@ class FindNoteQuestion(BaseModel):
 
     string_number: Annotated[int, Field(ge=1, le=6)]
     target_note: Note
-    correct_frets: Annotated[tuple[int, ...], Field(min_length=1)]
 
 
 def find_frets_for_note(string_number: int, target_note: Note) -> tuple[int, ...]:
@@ -33,7 +32,6 @@ def pick_find_note_question(rng: random.Random) -> FindNoteQuestion:
     return FindNoteQuestion(
         string_number=string_number,
         target_note=target_note,
-        correct_frets=find_frets_for_note(string_number, target_note),
     )
 
 

@@ -82,8 +82,8 @@ def test_post_check_correct_auto_advances_to_next_chord(client: TestClient) -> N
     body = response.text
     assert 'data-auto-advance="1"' in body
     assert "window.GuitarExercises.advanceTo('/exercises/chord-name')" in body
-    # No manual link on correct — auto-advance replaces it.
-    assert 'class="new-chord"' not in body
+    # Keep a manual fallback if inline auto-advance is unavailable.
+    assert 'href="/exercises/chord-name"' in body
 
 
 def test_post_check_incorrect_keeps_manual_new_chord_link(client: TestClient) -> None:

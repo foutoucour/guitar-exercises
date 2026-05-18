@@ -75,10 +75,7 @@ def test_pick_find_note_question_returns_valid_question_for_any_seed() -> None:
         assert isinstance(question, FindNoteQuestion)
         assert 1 <= question.string_number <= 6
         assert question.target_note in CHROMATIC
-        assert len(question.correct_frets) >= 1
-        assert question.correct_frets == find_frets_for_note(
-            question.string_number, question.target_note
-        )
+        assert len(find_frets_for_note(question.string_number, question.target_note)) >= 1
 
 
 def test_pick_find_note_question_is_deterministic_for_same_seed() -> None:
