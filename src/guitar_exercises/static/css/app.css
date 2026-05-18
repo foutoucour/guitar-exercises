@@ -290,6 +290,12 @@ body {
   fill: var(--md-sys-color-on-surface-variant);
 }
 
+.chord-fret-label {
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 600;
+  fill: var(--md-sys-color-on-surface);
+}
+
 /* ---------- string list (M3 outlined cards) ---------------- */
 .string-list {
   list-style: none;

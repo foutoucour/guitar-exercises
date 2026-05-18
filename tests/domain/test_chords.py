@@ -99,9 +99,30 @@ def test_d_7_notes_by_string() -> None:
 
 
 def test_catalog_size_and_unique_ids() -> None:
-    assert len(CHORDS) == 23
+    assert len(CHORDS) == 57
     ids = [c.id for c in CHORDS]
-    assert len(set(ids)) == 23
+    assert len(set(ids)) == 57
+
+
+def test_catalog_includes_movable_shapes_above_open_window() -> None:
+    """The catalog must contain shapes whose lowest fret is above the open-window (>1)
+    so users practise positions across the neck, not just open chords."""
+    fretted_minimums = []
+    for chord in CHORDS:
+        frets = [s.fret for s in chord.strings if s.fret is not None]
+        if frets:
+            fretted_minimums.append(min(frets))
+    assert max(fretted_minimums) >= 7, (
+        "expected at least one chord with a minimum fretted note at fret 7 or higher"
+    )
+
+
+def test_multiple_shapes_share_a_canonical_name() -> None:
+    """Movable shapes are intentionally added under the same canonical name as their
+    open counterparts so chord-name guesses still match."""
+    names = [c.name for c in CHORDS]
+    assert names.count("A major") >= 2
+    assert names.count("E minor") >= 2
 
 
 def test_pick_chord_is_deterministic_with_seed() -> None:

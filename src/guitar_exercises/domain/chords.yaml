@@ -126,3 +126,182 @@ chords:
     name: G major 7
     frets:   [3, 2, 0, 0, 0, 2]
     fingers: [3, 2, null, null, null, 1]
+
+  # ---- Movable CAGED shapes (barre and stretched forms) ----
+  # E-shape barre (root on 6th string)
+
+  - id: f_major
+    name: F major
+    frets:   [1, 3, 3, 2, 1, 1]
+    fingers: [1, 3, 4, 2, 1, 1]
+
+  - id: g_major_e_shape
+    name: G major
+    frets:   [3, 5, 5, 4, 3, 3]
+    fingers: [1, 3, 4, 2, 1, 1]
+
+  - id: a_major_e_shape
+    name: A major
+    frets:   [5, 7, 7, 6, 5, 5]
+    fingers: [1, 3, 4, 2, 1, 1]
+
+  - id: f_minor
+    name: F minor
+    frets:   [1, 3, 3, 1, 1, 1]
+    fingers: [1, 3, 4, 1, 1, 1]
+
+  - id: a_minor_e_shape
+    name: A minor
+    frets:   [5, 7, 7, 5, 5, 5]
+    fingers: [1, 3, 4, 1, 1, 1]
+
+  - id: f_7
+    name: F7
+    frets:   [1, 3, 1, 2, 1, 1]
+    fingers: [1, 3, 1, 2, 1, 1]
+
+  - id: a_7_e_shape
+    name: A7
+    frets:   [5, 7, 5, 6, 5, 5]
+    fingers: [1, 3, 1, 2, 1, 1]
+
+  - id: f_maj7_e_shape
+    name: F major 7
+    frets:   [1, 3, 2, 2, 1, 1]
+    fingers: [1, 4, 2, 3, 1, 1]
+
+  - id: g_maj7_e_shape
+    name: G major 7
+    frets:   [3, 5, 4, 4, 3, 3]
+    fingers: [1, 4, 2, 3, 1, 1]
+
+  - id: f_min7
+    name: F minor 7
+    frets:   [1, 3, 1, 1, 1, 1]
+    fingers: [1, 3, 1, 1, 1, 1]
+
+  - id: a_min7_e_shape
+    name: A minor 7
+    frets:   [5, 7, 5, 5, 5, 5]
+    fingers: [1, 3, 1, 1, 1, 1]
+
+  # A-shape barre (root on 5th string, 6th string muted)
+
+  - id: b_major
+    name: B major
+    frets:   [null, 2, 4, 4, 4, 2]
+    fingers: [null, 1, 2, 3, 4, 1]
+
+  - id: c_major_a_shape
+    name: C major
+    frets:   [null, 3, 5, 5, 5, 3]
+    fingers: [null, 1, 2, 3, 4, 1]
+
+  - id: d_major_a_shape
+    name: D major
+    frets:   [null, 5, 7, 7, 7, 5]
+    fingers: [null, 1, 2, 3, 4, 1]
+
+  - id: b_minor
+    name: B minor
+    frets:   [null, 2, 4, 4, 3, 2]
+    fingers: [null, 1, 3, 4, 2, 1]
+
+  - id: d_minor_a_shape
+    name: D minor
+    frets:   [null, 5, 7, 7, 6, 5]
+    fingers: [null, 1, 3, 4, 2, 1]
+
+  - id: b_7_a_shape
+    name: B7
+    frets:   [null, 2, 4, 2, 4, 2]
+    fingers: [null, 1, 3, 1, 4, 1]
+
+  - id: c_7_a_shape
+    name: C7
+    frets:   [null, 3, 5, 3, 5, 3]
+    fingers: [null, 1, 3, 1, 4, 1]
+
+  - id: b_maj7
+    name: B major 7
+    frets:   [null, 2, 4, 3, 4, 2]
+    fingers: [null, 1, 3, 2, 4, 1]
+
+  - id: d_maj7_a_shape
+    name: D major 7
+    frets:   [null, 5, 7, 6, 7, 5]
+    fingers: [null, 1, 3, 2, 4, 1]
+
+  - id: b_min7
+    name: B minor 7
+    frets:   [null, 2, 4, 2, 3, 2]
+    fingers: [null, 1, 3, 1, 2, 1]
+
+  - id: d_min7_a_shape
+    name: D minor 7
+    frets:   [null, 5, 7, 5, 6, 5]
+    fingers: [null, 1, 3, 1, 2, 1]
+
+  # D-shape (root on 4th string, top two strings muted)
+
+  - id: e_major_d_shape
+    name: E major
+    frets:   [null, null, 2, 4, 5, 4]
+    fingers: [null, null, 1, 2, 4, 3]
+
+  - id: g_major_d_shape
+    name: G major
+    frets:   [null, null, 5, 7, 8, 7]
+    fingers: [null, null, 1, 2, 4, 3]
+
+  - id: e_minor_d_shape
+    name: E minor
+    frets:   [null, null, 2, 4, 5, 3]
+    fingers: [null, null, 1, 3, 4, 2]
+
+  - id: e_7_d_shape
+    name: E7
+    frets:   [null, null, 2, 4, 3, 4]
+    fingers: [null, null, 1, 3, 2, 4]
+
+  - id: e_maj7_d_shape
+    name: E major 7
+    frets:   [null, null, 2, 4, 4, 4]
+    fingers: [null, null, 1, 2, 3, 4]
+
+  - id: e_min7_d_shape
+    name: E minor 7
+    frets:   [null, null, 2, 4, 3, 3]
+    fingers: [null, null, 1, 3, 2, 2]
+
+  # High-position shapes (further up the neck)
+
+  - id: c_major_e_shape
+    name: C major
+    frets:   [8, 10, 10, 9, 8, 8]
+    fingers: [1, 3, 4, 2, 1, 1]
+
+  - id: e_major_a_shape
+    name: E major
+    frets:   [null, 7, 9, 9, 9, 7]
+    fingers: [null, 1, 2, 3, 4, 1]
+
+  - id: e_minor_a_shape
+    name: E minor
+    frets:   [null, 7, 9, 9, 8, 7]
+    fingers: [null, 1, 3, 4, 2, 1]
+
+  - id: e_7_a_shape
+    name: E7
+    frets:   [null, 7, 9, 7, 9, 7]
+    fingers: [null, 1, 3, 1, 4, 1]
+
+  - id: e_maj7_a_shape
+    name: E major 7
+    frets:   [null, 7, 9, 8, 9, 7]
+    fingers: [null, 1, 3, 2, 4, 1]
+
+  - id: e_min7_a_shape
+    name: E minor 7
+    frets:   [null, 7, 9, 7, 8, 7]
+    fingers: [null, 1, 3, 1, 2, 1]
