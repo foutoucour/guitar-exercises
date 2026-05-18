@@ -55,9 +55,9 @@ def test_get_find_note_renders_clickable_buttons_only_on_target_string(
 ) -> None:
     response = pinned_client.get("/exercises/find-note")
     body = response.text
-    # 13 fret cells (0..12) on the target string should be submit buttons.
+    # 18 fret cells (0..17) on the target string should be submit buttons.
     fret_values = re.findall(r'name="fret"\s+value="(\d+)"', body, flags=re.DOTALL)
-    assert sorted(int(v) for v in fret_values) == list(range(13))
+    assert sorted(int(v) for v in fret_values) == list(range(18))
 
 
 def test_post_correct_fret_returns_correct_feedback(seeded_client: TestClient) -> None:
@@ -126,7 +126,7 @@ def test_post_invalid_note_returns_422(seeded_client: TestClient) -> None:
 def test_post_out_of_range_fret_returns_422(seeded_client: TestClient) -> None:
     response = seeded_client.post(
         "/exercises/find-note/check",
-        data={"string_number": 5, "target_note": "G", "fret": 13},
+        data={"string_number": 5, "target_note": "G", "fret": 18},
     )
     assert response.status_code == 422
 
