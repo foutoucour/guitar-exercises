@@ -144,7 +144,7 @@ def test_correct_feedback_includes_auto_advance_script(seeded_client: TestClient
         "/exercises/find-note/check",
         data={"string_number": 5, "target_note": "G", "fret": 10},
     )
-    assert "GuitarExercises.advanceTo" in response.text
+    assert "handleCorrectAdvance" in response.text
 
 
 def test_correct_feedback_includes_manual_next_link_fallback(seeded_client: TestClient) -> None:
