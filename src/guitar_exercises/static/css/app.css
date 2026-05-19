@@ -1054,25 +1054,17 @@ body.theme-paper {
   --ink-font-title: 700 1.1rem/1.4rem "Space Grotesk", system-ui, sans-serif;
   --ink-font-hand: "Caveat", cursive;
 
-  /* --- Body surface: base gradient + 30px ledger lines + SVG paper grain ---
+  /* --- Body surface: base gradient + SVG paper grain ---
      Layer order (top → bottom):
-       1. Paper grain at 3% opacity — feTurbulence SVG data-URI, multiply blend
-       2. Repeating ledger lines at --ink-rule alpha
-       3. Base cream gradient (paper-deep → paper)
+       1. Paper grain — feTurbulence SVG data-URI, multiply blend
+       2. Base cream gradient (paper-deep → paper)
      background-color provides the ultimate fallback. */
   background-color: var(--ink-paper);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 29px,
-      var(--ink-rule) 29px,
-      var(--ink-rule) 30px
-    ),
     linear-gradient(180deg, var(--ink-paper-deep) 0%, var(--ink-paper) 60%);
-  background-blend-mode: multiply, normal, normal;
-  background-size: 200px 200px, 100% 100%, 100% 100%;
+  background-blend-mode: multiply, normal;
+  background-size: 200px 200px, 100% 100%;
   color: var(--ink-graphite);
   font-family: "Space Grotesk", system-ui, sans-serif;
   -webkit-font-smoothing: auto;
