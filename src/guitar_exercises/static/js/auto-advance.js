@@ -12,9 +12,45 @@
   // change the cadence across the whole site.
   ns.autoAdvanceMs = 1200;
 
-  // Schedule a navigation to `url` after the shared delay.
+  // Schedule a navigation to `url` after the shared delay. Honours the
+  // session-wide "auto-advance" toggle exposed by timer.js: when the player
+  // has switched auto-advance off, we leave the manual "Next question" link
+  // (already present in every feedback fragment) as the only way forward.
   ns.advanceTo = function (url) {
     if (typeof url !== "string" || url.length === 0) return;
+    if (typeof ns.isAutoAdvanceEnabled === "function" && !ns.isAutoAdvanceEnabled()) {
+      return;
+    }
+    setTimeout(function () {
+      window.location.assign(url);
+    }, ns.autoAdvanceMs);
+  };
+
+  // Called from the inline <script> inside every "correct answer" feedback
+  // fragment. Centralises the toggle-aware logic so the per-fragment script
+  // stays a one-liner:
+  //
+  //   - Auto-advance ON  : hide the manual "Next question" link (the JS
+  //                        timeout will navigate for the user), keep the
+  //                        "coming up…" hint visible, schedule navigation.
+  //   - Auto-advance OFF : hide the "coming up…" hint (it would lie), leave
+  //                        the manual link visible so the player can click
+  //                        when they're ready, do not navigate.
+  ns.handleCorrectAdvance = function (scriptEl, url) {
+    if (typeof url !== "string" || url.length === 0) return;
+    const enabled = typeof ns.isAutoAdvanceEnabled !== "function"
+      || ns.isAutoAdvanceEnabled();
+    const container = scriptEl && scriptEl.parentNode;
+    if (!enabled) {
+      if (container) {
+        const hint = container.querySelector(".next-chord-hint");
+        if (hint) hint.hidden = true;
+      }
+      return;
+    }
+    if (scriptEl && scriptEl.previousElementSibling) {
+      scriptEl.previousElementSibling.hidden = true;
+    }
     setTimeout(function () {
       window.location.assign(url);
     }, ns.autoAdvanceMs);

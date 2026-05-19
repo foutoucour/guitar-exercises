@@ -83,7 +83,7 @@ def test_post_correct_guess_includes_auto_advance(pinned_client: TestClient) -> 
         "/exercises/name-note/check",
         data={"string_number": 6, "fret": 5, "guess": "A"},
     )
-    assert "GuitarExercises.advanceTo" in response.text
+    assert "handleCorrectAdvance" in response.text
 
 
 def test_post_correct_guess_includes_manual_next_link_fallback(

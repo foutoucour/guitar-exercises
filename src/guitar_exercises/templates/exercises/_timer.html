@@ -1,0 +1,52 @@
+{# Timer + recent-times widget. Driven by:
+   - JS (static/js/timer.js): keeps `.exercise-timer-live` ticking and injects
+     `elapsed_ms` into every HTMX form submission via htmx:configRequest.
+   - Server (routes/exercises.py): renders the chip row, current streak,
+      best streak, and average from the per-exercise timings cookie.
+   Always shows the live timer; streak/avg/history appear after first timing. #}
+{% set t = timer %}
+<aside class="exercise-timer"
+       data-timer-root="1"
+       data-exercise-path="{{ t.exercise_path }}"
+       aria-label="Answer timer and recent times">
+  <div class="exercise-timer-row">
+    <span class="exercise-timer-live" data-timer-live="1" aria-live="off">0.0s</span>
+    {% if t.timings %}
+      <span class="exercise-timer-streak" title="Consecutive correct answers">
+        <span class="exercise-timer-streak-flame" aria-hidden="true">🔥</span>
+        <span class="exercise-timer-streak-value">{{ t.current_streak }}</span>
+        <span class="exercise-timer-streak-label">streak</span>
+      </span>
+      {% if t.best_streak > 0 %}
+        <span class="exercise-timer-streak-best" title="Longest streak this session">
+          best {{ t.best_streak }}
+        </span>
+      {% endif %}
+      {% if t.average_ms is not none %}
+        <span class="exercise-timer-avg" title="Average time on correct answers">
+          avg {{ "%.1f"|format(t.average_ms / 1000) }}s
+        </span>
+      {% endif %}
+    {% endif %}
+    <label class="exercise-timer-auto-advance" title="When off, you click Next to move on between questions">
+      <input type="checkbox"
+             data-auto-advance-toggle="1"
+             {% if t.auto_advance %}checked{% endif %}>
+      <span>auto-advance</span>
+    </label>
+  </div>
+  {% if t.timings %}
+    {# Show the last 10 chips, oldest-first left-to-right so the eye reads them
+       like a timeline. The cookie stores newest-first, so we reverse a slice. #}
+    {% set recent_chips = (t.timings[:10] | list)[::-1] %}
+    <ol class="exercise-timer-history" aria-label="Recent answer times">
+      {% for entry in recent_chips %}
+        <li class="exercise-timer-chip {{ 'correct' if entry.correct else 'incorrect' }}"
+            title="{{ 'Correct' if entry.correct else 'Incorrect' }}: {{ "%.2f"|format(entry.elapsed_ms / 1000) }}s">
+          <span class="exercise-timer-chip-mark" aria-hidden="true">{{ '✓' if entry.correct else '✗' }}</span>
+          <span class="exercise-timer-chip-time">{{ "%.1f"|format(entry.elapsed_ms / 1000) }}s</span>
+        </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+</aside>

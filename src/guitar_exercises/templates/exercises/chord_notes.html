@@ -3,6 +3,7 @@
 {% block title %}{{ chord.name }} — Name the notes{% endblock %}
 {% block content %}
 <section class="exercise">
+  {% include "exercises/_timer.html" %}
   <header class="exercise-header">
     <p class="exercise-eyebrow">Name the notes</p>
     <h1 class="chord-name">{{ chord.name }}</h1>
@@ -28,5 +29,5 @@
 
   <a class="new-chord" href="/exercises/chord-notes">New chord</a>
 </section>
-<script src="/static/js/chord-notes.js?v=m3-15" defer></script>
+<script src="/static/js/chord-notes.js?v=m3-18" defer></script>
 {% endblock %}

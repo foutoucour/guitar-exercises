@@ -81,6 +81,27 @@
     return stringList.querySelector(".string-row-incorrect") !== null;
   }
 
+  function unansweredPlayableCount() {
+    // A playable row still has `.note-chips`; once HTMX swaps in the answered
+    // fragment the row no longer carries that element.
+    return Array.from(stringList.querySelectorAll(".string-row")).filter(function (row) {
+      return chipsOf(row) !== null;
+    }).length;
+  }
+
+  // The page records ONE history entry per chord, fired by the final string's
+  // POST. At configRequest time, if exactly one playable row remains, this
+  // submission completes the chord. We also send `chord_correct=1` when no
+  // previously-answered row was wrong — the server then ANDs that with the
+  // correctness of this final string before storing.
+  document.body.addEventListener("htmx:configRequest", function (event) {
+    const form = event.detail && event.detail.elt;
+    if (!form || !form.classList || !form.classList.contains("answer-form")) return;
+    if (unansweredPlayableCount() !== 1) return;
+    event.detail.parameters.final_string = 1;
+    event.detail.parameters.chord_correct = anyIncorrect() ? 0 : 1;
+  });
+
   // After an htmx swap turns a row into its answered state, unlock the next
   // playable string. When every playable string has been answered: if they
   // were all correct, auto-advance to the next chord using the shared
@@ -94,14 +115,19 @@
       activate(next, true);
       return;
     }
-    if (!anyIncorrect() && window.GuitarExercises && window.GuitarExercises.advanceTo) {
-      window.GuitarExercises.advanceTo("/exercises/chord-notes");
+    const g = window.GuitarExercises;
+    const autoAdvanceOn = !g || typeof g.isAutoAdvanceEnabled !== "function"
+      || g.isAutoAdvanceEnabled();
+    if (!anyIncorrect() && autoAdvanceOn && g && g.advanceTo) {
+      g.advanceTo("/exercises/chord-notes");
       return;
     }
+    // Either at least one string was wrong, OR the player turned auto-advance
+    // off — let them move on manually with Enter/Space or by clicking.
     const newChord = document.querySelector("a.new-chord");
     if (newChord) newChord.focus();
-    if (window.GuitarExercises && window.GuitarExercises.armKeyAdvance) {
-      window.GuitarExercises.armKeyAdvance("/exercises/chord-notes");
+    if (g && g.armKeyAdvance) {
+      g.armKeyAdvance("/exercises/chord-notes");
     }
   });
 })();
