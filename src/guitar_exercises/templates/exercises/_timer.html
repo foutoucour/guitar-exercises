@@ -28,6 +28,12 @@
         </span>
       {% endif %}
     {% endif %}
+    <label class="exercise-timer-auto-advance" title="When off, you click Next to move on between questions">
+      <input type="checkbox"
+             data-auto-advance-toggle="1"
+             {% if t.auto_advance %}checked{% endif %}>
+      <span>auto-advance</span>
+    </label>
   </div>
   {% if t.timings %}
     {# Show the last 10 chips, oldest-first left-to-right so the eye reads them

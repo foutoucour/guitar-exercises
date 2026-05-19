@@ -32,6 +32,7 @@ from guitar_exercises.domain.timings import (
     Timing,
     average_correct_ms,
     current_streak,
+    parse_auto_advance,
     parse_best_streak,
     parse_timings,
     push_timing,
@@ -63,6 +64,11 @@ BEST_STREAK_COOKIE_CHORD_NOTES = "best_streak_chord_notes"
 BEST_STREAK_COOKIE_CHORD_NAME = "best_streak_chord_name"
 BEST_STREAK_COOKIE_FIND_NOTE = "best_streak_find_note"
 BEST_STREAK_COOKIE_NAME_NOTE = "best_streak_name_note"
+
+# Toggle for the 1.2s auto-advance after a correct answer. Shared across
+# all exercises (one cookie, one preference). Written client-side by
+# timer.js when the player ticks the checkbox.
+AUTO_ADVANCE_COOKIE = "auto_advance"
 
 _RECENT_COOKIE_MAX_AGE = 60 * 60 * 24  # 1 day
 
@@ -133,6 +139,7 @@ def _timer_context(
     best_streak: int,
     *,
     exercise_path: str,
+    auto_advance: bool,
 ) -> dict[str, object]:
     """Build the template context block the ``_timer.html`` partial consumes."""
     return {
@@ -142,6 +149,7 @@ def _timer_context(
             "current_streak": current_streak(timings),
             "best_streak": best_streak,
             "average_ms": average_correct_ms(timings),
+            "auto_advance": auto_advance,
         },
     }
 
@@ -156,6 +164,7 @@ async def chord_notes_page(
     best_streak_chord_notes: Annotated[
         str | None, Cookie(alias=BEST_STREAK_COOKIE_CHORD_NOTES)
     ] = None,
+    auto_advance: Annotated[str | None, Cookie(alias=AUTO_ADVANCE_COOKIE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_chord_notes)
     timings = parse_timings(times_chord_notes)
@@ -169,7 +178,12 @@ async def chord_notes_page(
             "chord": chord,
             "svg": svg,
             "notes": list(CHROMATIC),
-            **_timer_context(timings, best_streak, exercise_path="/exercises/chord-notes"),
+            **_timer_context(
+                timings,
+                best_streak,
+                exercise_path="/exercises/chord-notes",
+                auto_advance=parse_auto_advance(auto_advance),
+            ),
         },
     )
     _set_recent_cookie(response, RECENT_COOKIE_CHORD_NOTES, recent, chord_question_key(chord))
@@ -239,6 +253,7 @@ async def chord_name_page(
     best_streak_chord_name: Annotated[
         str | None, Cookie(alias=BEST_STREAK_COOKIE_CHORD_NAME)
     ] = None,
+    auto_advance: Annotated[str | None, Cookie(alias=AUTO_ADVANCE_COOKIE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_chord_name)
     timings = parse_timings(times_chord_name)
@@ -251,7 +266,12 @@ async def chord_name_page(
         {
             "chord": chord,
             "svg": svg,
-            **_timer_context(timings, best_streak, exercise_path="/exercises/chord-name"),
+            **_timer_context(
+                timings,
+                best_streak,
+                exercise_path="/exercises/chord-name",
+                auto_advance=parse_auto_advance(auto_advance),
+            ),
         },
     )
     _set_recent_cookie(response, RECENT_COOKIE_CHORD_NAME, recent, chord_question_key(chord))
@@ -321,9 +341,8 @@ async def find_note_page(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     recent_find_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_FIND_NOTE)] = None,
     times_find_note: Annotated[str | None, Cookie(alias=TIMINGS_COOKIE_FIND_NOTE)] = None,
-    best_streak_find_note: Annotated[
-        str | None, Cookie(alias=BEST_STREAK_COOKIE_FIND_NOTE)
-    ] = None,
+    best_streak_find_note: Annotated[str | None, Cookie(alias=BEST_STREAK_COOKIE_FIND_NOTE)] = None,
+    auto_advance: Annotated[str | None, Cookie(alias=AUTO_ADVANCE_COOKIE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_find_note)
     timings = parse_timings(times_find_note)
@@ -336,7 +355,12 @@ async def find_note_page(
         {
             **context,
             "target_note": question.target_note,
-            **_timer_context(timings, best_streak, exercise_path="/exercises/find-note"),
+            **_timer_context(
+                timings,
+                best_streak,
+                exercise_path="/exercises/find-note",
+                auto_advance=parse_auto_advance(auto_advance),
+            ),
         },
     )
     _set_recent_cookie(response, RECENT_COOKIE_FIND_NOTE, recent, find_note_question_key(question))
@@ -352,9 +376,7 @@ async def find_note_check(
     fret: Annotated[int, Form(ge=0, le=MAX_FRET)],
     elapsed_ms: Annotated[int | None, Form(ge=0, le=600_000)] = None,
     times_find_note: Annotated[str | None, Cookie(alias=TIMINGS_COOKIE_FIND_NOTE)] = None,
-    best_streak_find_note: Annotated[
-        str | None, Cookie(alias=BEST_STREAK_COOKIE_FIND_NOTE)
-    ] = None,
+    best_streak_find_note: Annotated[str | None, Cookie(alias=BEST_STREAK_COOKIE_FIND_NOTE)] = None,
 ) -> HTMLResponse:
     try:
         note = Note(target_note)
@@ -399,9 +421,8 @@ async def name_note_page(
     templates: Annotated[Jinja2Templates, Depends(get_templates)],
     recent_name_note: Annotated[str | None, Cookie(alias=RECENT_COOKIE_NAME_NOTE)] = None,
     times_name_note: Annotated[str | None, Cookie(alias=TIMINGS_COOKIE_NAME_NOTE)] = None,
-    best_streak_name_note: Annotated[
-        str | None, Cookie(alias=BEST_STREAK_COOKIE_NAME_NOTE)
-    ] = None,
+    best_streak_name_note: Annotated[str | None, Cookie(alias=BEST_STREAK_COOKIE_NAME_NOTE)] = None,
+    auto_advance: Annotated[str | None, Cookie(alias=AUTO_ADVANCE_COOKIE)] = None,
 ) -> HTMLResponse:
     recent = parse_recent(recent_name_note)
     timings = parse_timings(times_name_note)
@@ -416,7 +437,12 @@ async def name_note_page(
             "highlighted_fret": question.fret,
             "expected_note": question.expected_note,
             "notes": list(CHROMATIC),
-            **_timer_context(timings, best_streak, exercise_path="/exercises/name-note"),
+            **_timer_context(
+                timings,
+                best_streak,
+                exercise_path="/exercises/name-note",
+                auto_advance=parse_auto_advance(auto_advance),
+            ),
         },
     )
     _set_recent_cookie(response, RECENT_COOKIE_NAME_NOTE, recent, name_note_question_key(question))
@@ -432,9 +458,7 @@ async def name_note_check(
     guess: Annotated[str, Form(min_length=1, max_length=2)],
     elapsed_ms: Annotated[int | None, Form(ge=0, le=600_000)] = None,
     times_name_note: Annotated[str | None, Cookie(alias=TIMINGS_COOKIE_NAME_NOTE)] = None,
-    best_streak_name_note: Annotated[
-        str | None, Cookie(alias=BEST_STREAK_COOKIE_NAME_NOTE)
-    ] = None,
+    best_streak_name_note: Annotated[str | None, Cookie(alias=BEST_STREAK_COOKIE_NAME_NOTE)] = None,
 ) -> HTMLResponse:
     expected = note_for_string(string_number, fret)
     correct = is_correct_guess(guess, expected)

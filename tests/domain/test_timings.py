@@ -4,6 +4,7 @@ from guitar_exercises.domain.timings import (
     Timing,
     average_correct_ms,
     current_streak,
+    parse_auto_advance,
     parse_best_streak,
     parse_timings,
     push_timing,
@@ -137,3 +138,16 @@ def test_update_best_streak_is_monotonic() -> None:
     assert update_best_streak(3, 5) == 5
     assert update_best_streak(7, 2) == 7
     assert update_best_streak(0, 0) == 0
+
+
+def test_parse_auto_advance_defaults_on_for_missing_or_invalid() -> None:
+    # First-time visitors should get the snappy default cadence, so anything
+    # other than the explicit "0" string is treated as enabled.
+    assert parse_auto_advance(None) is True
+    assert parse_auto_advance("") is True
+    assert parse_auto_advance("1") is True
+    assert parse_auto_advance("nonsense") is True
+
+
+def test_parse_auto_advance_off_only_for_explicit_zero() -> None:
+    assert parse_auto_advance("0") is False

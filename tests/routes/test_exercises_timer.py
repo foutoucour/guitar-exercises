@@ -358,3 +358,60 @@ def test_max_fret_route_constant_is_used_for_form_validation(
         data={"string_number": 6, "target_note": "E", "fret": MAX_FRET + 1},
     )
     assert response.status_code == 422
+
+
+# --- auto-advance toggle ----------------------------------------------------
+
+import pytest as _pytest  # noqa: E402  (kept near these tests for locality)
+
+
+@_pytest.mark.parametrize(
+    "path",
+    [
+        "/exercises/chord-notes",
+        "/exercises/chord-name",
+        "/exercises/find-note",
+        "/exercises/name-note",
+    ],
+)
+def test_auto_advance_toggle_renders_checked_by_default(
+    seeded_client: TestClient, path: str
+) -> None:
+    body = seeded_client.get(path).text
+    assert "data-auto-advance-toggle" in body
+    # Default for first-time visitors is "on" — the input must be pre-checked.
+    assert 'data-auto-advance-toggle="1"\n             checked' in body or (
+        "data-auto-advance-toggle" in body
+        and "checked" in body.split("data-auto-advance-toggle")[1].split(">", 1)[0]
+    )
+
+
+@_pytest.mark.parametrize(
+    "path",
+    [
+        "/exercises/chord-notes",
+        "/exercises/chord-name",
+        "/exercises/find-note",
+        "/exercises/name-note",
+    ],
+)
+def test_auto_advance_off_cookie_unchecks_toggle(seeded_client: TestClient, path: str) -> None:
+    # Simulate the JS having written the toggle off; the server must render
+    # the checkbox unchecked so the UI stays consistent on refresh.
+    seeded_client.cookies.set("auto_advance", "0", path="/exercises")
+    body = seeded_client.get(path).text
+    toggle_attrs = body.split("data-auto-advance-toggle")[1].split(">", 1)[0]
+    assert "checked" not in toggle_attrs
+
+
+def test_feedback_uses_handle_correct_advance_helper(
+    pinned_name_note_client: TestClient,
+) -> None:
+    # The inline script on a correct answer must delegate to the toggle-aware
+    # helper rather than calling advanceTo directly — otherwise turning the
+    # toggle off has no effect.
+    response = pinned_name_note_client.post(
+        "/exercises/name-note/check",
+        data={"string_number": 6, "fret": 5, "guess": "A", "elapsed_ms": 1500},
+    )
+    assert "handleCorrectAdvance" in response.text

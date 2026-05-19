@@ -115,14 +115,19 @@
       activate(next, true);
       return;
     }
-    if (!anyIncorrect() && window.GuitarExercises && window.GuitarExercises.advanceTo) {
-      window.GuitarExercises.advanceTo("/exercises/chord-notes");
+    const g = window.GuitarExercises;
+    const autoAdvanceOn = !g || typeof g.isAutoAdvanceEnabled !== "function"
+      || g.isAutoAdvanceEnabled();
+    if (!anyIncorrect() && autoAdvanceOn && g && g.advanceTo) {
+      g.advanceTo("/exercises/chord-notes");
       return;
     }
+    // Either at least one string was wrong, OR the player turned auto-advance
+    // off — let them move on manually with Enter/Space or by clicking.
     const newChord = document.querySelector("a.new-chord");
     if (newChord) newChord.focus();
-    if (window.GuitarExercises && window.GuitarExercises.armKeyAdvance) {
-      window.GuitarExercises.armKeyAdvance("/exercises/chord-notes");
+    if (g && g.armKeyAdvance) {
+      g.armKeyAdvance("/exercises/chord-notes");
     }
   });
 })();

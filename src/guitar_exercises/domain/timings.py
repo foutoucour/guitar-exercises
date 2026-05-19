@@ -102,3 +102,13 @@ def parse_best_streak(cookie_value: str | None) -> int:
 
 def update_best_streak(previous_best: int, new_streak: int) -> int:
     return max(previous_best, new_streak)
+
+
+def parse_auto_advance(cookie_value: str | None) -> bool:
+    """Decode the auto-advance toggle cookie. Default is ``True`` (enabled).
+
+    The cookie is written client-side by ``timer.js`` so its only legal values
+    are ``"0"`` and ``"1"``. Treat anything else (missing, malformed) as the
+    default-on state so first-time visitors get the snappy default cadence.
+    """
+    return cookie_value != "0"

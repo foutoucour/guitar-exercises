@@ -5,10 +5,9 @@
     <a class="new-chord" href="/exercises/chord-name">Next chord</a>
     <script>
       (function () {
-        if (window.GuitarExercises && typeof window.GuitarExercises.advanceTo === 'function') {
-          const fallback = document.currentScript.previousElementSibling;
-          if (fallback) fallback.hidden = true;
-          window.GuitarExercises.advanceTo('/exercises/chord-name');
+        const g = window.GuitarExercises;
+        if (g && typeof g.handleCorrectAdvance === 'function') {
+          g.handleCorrectAdvance(document.currentScript, '/exercises/chord-name');
         }
       })();
     </script>

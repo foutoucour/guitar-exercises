@@ -1055,6 +1055,11 @@ button.fretboard-cell:active {
   font-size: 1.5rem;
   color: var(--md-sys-color-primary);
   min-width: 4ch;
+  transition: color 200ms ease;
+}
+
+.exercise-timer-live--stopped {
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .exercise-timer-streak,
@@ -1128,4 +1133,56 @@ button.fretboard-cell:active {
   font-size: 0.85em;
   color: var(--md-sys-color-on-surface-variant);
   font-variant-numeric: tabular-nums;
+}
+
+.exercise-timer-auto-advance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  user-select: none;
+}
+
+.exercise-timer-auto-advance input[type="checkbox"] {
+  appearance: none;
+  width: 2.2rem;
+  height: 1.2rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  position: relative;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  flex: none;
+}
+
+.exercise-timer-auto-advance input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.15rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--md-sys-color-on-surface-variant);
+  transform: translateY(-50%);
+  transition: left 150ms ease, background 150ms ease;
+}
+
+.exercise-timer-auto-advance input[type="checkbox"]:checked {
+  background: var(--md-sys-color-accent-container);
+  border-color: var(--md-sys-color-accent);
+}
+
+.exercise-timer-auto-advance input[type="checkbox"]:checked::after {
+  left: 1.05rem;
+  background: var(--md-sys-color-accent);
+}
+
+.exercise-timer-auto-advance input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--md-sys-color-accent);
+  outline-offset: 2px;
 }

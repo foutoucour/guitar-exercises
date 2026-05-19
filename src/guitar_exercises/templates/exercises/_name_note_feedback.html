@@ -10,10 +10,9 @@
       <a class="new-chord" href="/exercises/name-note">Next question</a>
       <script>
         (function () {
-          if (window.GuitarExercises && typeof window.GuitarExercises.advanceTo === 'function') {
-            const fallback = document.currentScript.previousElementSibling;
-            if (fallback) fallback.hidden = true;
-            window.GuitarExercises.advanceTo('/exercises/name-note');
+          const g = window.GuitarExercises;
+          if (g && typeof g.handleCorrectAdvance === 'function') {
+            g.handleCorrectAdvance(document.currentScript, '/exercises/name-note');
           }
         })();
       </script>
