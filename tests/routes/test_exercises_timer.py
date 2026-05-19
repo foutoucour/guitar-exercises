@@ -46,6 +46,12 @@ def seeded_client() -> Iterator[TestClient]:
         yield client
 
 
+def _timer_streak_value(html: str) -> int:
+    match = re.search(r'class="exercise-timer-streak-value">\s*(\d+)\s*<', html)
+    assert match is not None, "streak value span not found"
+    return int(match.group(1))
+
+
 # --- name-note (the simplest single-answer exercise) ---
 
 
@@ -128,9 +134,7 @@ def test_name_note_streak_increments_then_resets(
             data={"string_number": 6, "fret": 5, "guess": "A", "elapsed_ms": 1000},
         )
     page = pinned_name_note_client.get("/exercises/name-note").text
-    assert "exercise-timer-streak-value" in page
-    # The streak value is rendered in its own span — use a marker to grab it.
-    assert ">3<" in page
+    assert _timer_streak_value(page) == 3
 
     # A wrong answer must drop the current streak to 0 while keeping best at 3.
     pinned_name_note_client.post(
@@ -138,7 +142,7 @@ def test_name_note_streak_increments_then_resets(
         data={"string_number": 6, "fret": 5, "guess": "C", "elapsed_ms": 1000},
     )
     page = pinned_name_note_client.get("/exercises/name-note").text
-    assert ">0<" in page
+    assert _timer_streak_value(page) == 0
     assert "best 3" in page
 
 
@@ -362,10 +366,8 @@ def test_max_fret_route_constant_is_used_for_form_validation(
 
 # --- auto-advance toggle ----------------------------------------------------
 
-import pytest as _pytest  # noqa: E402  (kept near these tests for locality)
 
-
-@_pytest.mark.parametrize(
+@pytest.mark.parametrize(
     "path",
     [
         "/exercises/chord-notes",
@@ -386,7 +388,7 @@ def test_auto_advance_toggle_renders_checked_by_default(
     )
 
 
-@_pytest.mark.parametrize(
+@pytest.mark.parametrize(
     "path",
     [
         "/exercises/chord-notes",
