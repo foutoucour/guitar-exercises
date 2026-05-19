@@ -1736,13 +1736,13 @@ body.theme-paper .exercise-timer-chip {
 }
 
 body.theme-paper .exercise-timer-chip.correct {
-  background: #e8f0e8;
+  background: var(--ink-success-bg);
   color: var(--ink-green);
   border-color: var(--ink-green);
 }
 
 body.theme-paper .exercise-timer-chip.incorrect {
-  background: #f5e8e8;
+  background: var(--ink-error-bg);
   color: var(--ink-red);
   border-color: var(--ink-red);
 }
