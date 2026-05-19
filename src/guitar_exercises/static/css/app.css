@@ -1047,6 +1047,8 @@ body.theme-paper {
   --ink-faded:      #6a6450;
   --ink-red:        #b8342a;
   --ink-green:      #2f6b3a;
+  --ink-success-bg: #e8f0e8;
+  --ink-error-bg:   #f5e8e8;
   --ink-blue:       #1d4e89;
   --ink-blue-soft:  #d8e3f0;
 
@@ -1281,12 +1283,12 @@ body.theme-paper .find-note-feedback {
 }
 
 body.theme-paper .find-note-feedback.correct {
-  background: #e8f0e8;
+  background: var(--ink-success-bg);
   border-color: var(--ink-green);
 }
 
 body.theme-paper .find-note-feedback.incorrect {
-  background: #f5e8e8;
+  background: var(--ink-error-bg);
   border-color: var(--ink-red);
 }
 
@@ -1429,12 +1431,12 @@ body.theme-paper .string-row-muted {
 }
 
 body.theme-paper .string-row-correct {
-  background: #e8f0e8;
+  background: var(--ink-success-bg);
   border-color: var(--ink-green);
 }
 
 body.theme-paper .string-row-incorrect {
-  background: #f5e8e8;
+  background: var(--ink-error-bg);
   border-color: var(--ink-red);
 }
 
@@ -1510,7 +1512,7 @@ body.theme-paper .chord-guess-feedback {
 }
 
 body.theme-paper .chord-guess-feedback.correct {
-  background: #e8f0e8;
+  background: var(--ink-success-bg);
   border-color: var(--ink-green);
 }
 
@@ -1519,7 +1521,7 @@ body.theme-paper .chord-guess-feedback.correct .answer-feedback {
 }
 
 body.theme-paper .chord-guess-feedback.incorrect {
-  background: #f5e8e8;
+  background: var(--ink-error-bg);
   border-color: var(--ink-red);
 }
 
