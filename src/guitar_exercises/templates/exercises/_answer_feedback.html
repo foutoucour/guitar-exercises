@@ -1,8 +1,8 @@
 <li id="string-{{ string_number }}" class="string-row string-row-answered {{ 'string-row-correct' if correct else 'string-row-incorrect' }}">
   <span class="string-label">{{ string_number }} string</span>
   {% if correct %}
-    <span class="answer-feedback">✓ Correct: {{ expected_note }}</span>
+    <span class="answer-feedback feedback-stamp feedback-stamp--correct">✓ Correct: {{ expected_note }}</span>
   {% else %}
-    <span class="answer-feedback">✗ You said {{ guess }} — the note is {{ expected_note }}</span>
+    <span class="answer-feedback feedback-stamp feedback-stamp--incorrect">✗ You said {{ guess }} — the note is {{ expected_note }}</span>
   {% endif %}
 </li>

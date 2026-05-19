@@ -1032,8 +1032,7 @@ button.fretboard-cell:active {
 
 /* =========================================================
    Paper-and-ink theme — scoped to body.theme-paper
-   Prototype applied to find_note only; ready for full rollout.
-   All rules below are non-destructive — M3 pages are untouched.
+   Applied to all pages. All rules are non-destructive — M3 pages untouched.
    ========================================================= */
 
 /* --- Design tokens ---------------------------------------- */
@@ -1312,15 +1311,20 @@ body.theme-paper .find-note-feedback .next-chord-hint {
   font-style: normal;
 }
 
-/* --- Next-question button — ink-blue instead of teal ------ */
+/* --- Next-question / action button — ink-blue instead of teal ------------ */
 body.theme-paper .new-chord {
   background: var(--ink-blue);
   color: var(--ink-paper);
   box-shadow: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   text-transform: none;
   font-family: "Space Grotesk", system-ui, sans-serif;
   font-weight: 700;
+}
+
+/* State layer uses --ink-paper so hover lightens rather than darkens */
+body.theme-paper .new-chord::after {
+  background: var(--ink-paper);
 }
 
 body.theme-paper .new-chord:hover {
@@ -1334,7 +1338,7 @@ body.theme-paper .new-chord:focus-visible {
 
 /* Feedback banner stamp styles — glyph + stroke treatment (not colour alone) */
 body.theme-paper .feedback-stamp--correct {
-  /* Green ink-stamp circle around the ✓ text (border applied to the inline span) */
+  /* Green ink-stamp border around the ✓ text */
   display: inline-block;
   border: 1.5px solid var(--ink-green);
   border-radius: 4px;
@@ -1342,9 +1346,196 @@ body.theme-paper .feedback-stamp--correct {
 }
 
 body.theme-paper .feedback-stamp--incorrect {
-  /* Red ballpoint underline — wavy underline as stroke treatment distinct from colour */
+  /* Red ballpoint underline — wavy stroke distinct from colour */
   text-decoration: underline wavy var(--ink-red);
   text-underline-offset: 3px;
+}
+
+/* --- Home page -------------------------------------------- */
+body.theme-paper .home-header {
+  border-bottom-color: var(--ink-rule);
+}
+
+body.theme-paper .home-title {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--ink-graphite);
+  text-shadow: none;
+}
+
+/* Exercise cards: paper-cream surface, warm shadow, no M3 elevation */
+body.theme-paper .exercise-card {
+  background: var(--ink-paper-deep);
+  box-shadow: 2px 3px 8px rgba(80, 50, 10, 0.14);
+  border: 1px solid var(--ink-rule);
+}
+
+body.theme-paper .exercise-card:hover {
+  box-shadow: 3px 5px 14px rgba(80, 50, 10, 0.22);
+  transform: translateY(-1px);
+}
+
+body.theme-paper .exercise-card-icon {
+  background: var(--ink-paper);
+  color: var(--ink-graphite);
+  box-shadow: none;
+}
+
+body.theme-paper .exercise-card-title {
+  color: var(--ink-graphite);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+body.theme-paper .exercise-card-desc {
+  color: var(--ink-faded);
+}
+
+/* State layer: use graphite so hover tints toward ink rather than M3 primary */
+body.theme-paper .exercise-card-link::after {
+  background: var(--ink-graphite);
+}
+
+/* --- Chord diagram SVG (chord_notes + chord_name) --------- */
+/* Direct overrides: diagram fills reference M3 on-surface tokens via SVG fill */
+body.theme-paper .chord-diagram {
+  color: var(--ink-graphite);
+  filter: drop-shadow(0 1px 4px rgba(80, 50, 10, 0.2));
+}
+
+body.theme-paper .chord-marker {
+  fill: var(--ink-graphite);
+}
+
+body.theme-paper .chord-finger {
+  fill: var(--ink-pencil);
+}
+
+body.theme-paper .chord-fret-label {
+  fill: var(--ink-graphite);
+}
+
+/* --- String list (chord_notes) ----------------------------- */
+body.theme-paper .string-row {
+  background: var(--ink-paper);
+  border-color: var(--ink-rule);
+  box-shadow: 1px 2px 6px rgba(80, 50, 10, 0.1);
+}
+
+body.theme-paper .string-row-muted {
+  background: transparent;
+  border-color: var(--ink-rule);
+  box-shadow: none;
+}
+
+body.theme-paper .string-row-correct {
+  background: #e8f0e8;
+  border-color: var(--ink-green);
+}
+
+body.theme-paper .string-row-incorrect {
+  background: #f5e8e8;
+  border-color: var(--ink-red);
+}
+
+body.theme-paper .string-row-correct .answer-feedback {
+  color: var(--ink-green);
+}
+
+body.theme-paper .string-row-incorrect .answer-feedback {
+  color: var(--ink-red);
+}
+
+body.theme-paper .string-label {
+  color: var(--ink-faded);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+body.theme-paper .string-status {
+  color: var(--ink-faded);
+}
+
+/* --- Note chips (chord_notes answer-form + name_note chip group) */
+body.theme-paper .note-chip {
+  background: var(--ink-paper);
+  border-color: var(--ink-pencil);
+  color: var(--ink-graphite);
+}
+
+/* State layer: use graphite so hover tints toward ink */
+body.theme-paper .note-chip::after {
+  background: var(--ink-graphite);
+}
+
+body.theme-paper .note-chip:hover {
+  border-color: var(--ink-blue);
+}
+
+body.theme-paper .note-chip:focus-visible {
+  background: var(--ink-blue-soft);
+  border-color: var(--ink-blue);
+  color: var(--ink-blue);
+  box-shadow: 0 0 0 3px rgba(29, 78, 137, 0.25);
+}
+
+/* --- Chord-name guess form --------------------------------- */
+body.theme-paper .chord-guess-input {
+  background: var(--ink-paper);
+  border-color: var(--ink-rule);
+  color: var(--ink-graphite);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  box-shadow: none;
+}
+
+body.theme-paper .chord-guess-input::placeholder {
+  color: var(--ink-faded);
+  opacity: 1;
+  font-style: italic;
+}
+
+body.theme-paper .chord-guess-input:hover {
+  border-color: var(--ink-blue);
+}
+
+body.theme-paper .chord-guess-input:focus,
+body.theme-paper .chord-guess-input:focus-visible {
+  border-color: var(--ink-blue);
+  box-shadow: 0 0 0 3px rgba(29, 78, 137, 0.25);
+}
+
+body.theme-paper .chord-guess-feedback {
+  background: var(--ink-paper-deep);
+  border-color: var(--ink-rule);
+  box-shadow: none;
+}
+
+body.theme-paper .chord-guess-feedback.correct {
+  background: #e8f0e8;
+  border-color: var(--ink-green);
+}
+
+body.theme-paper .chord-guess-feedback.correct .answer-feedback {
+  color: var(--ink-green);
+}
+
+body.theme-paper .chord-guess-feedback.incorrect {
+  background: #f5e8e8;
+  border-color: var(--ink-red);
+}
+
+body.theme-paper .chord-guess-feedback.incorrect .answer-feedback {
+  color: var(--ink-red);
+}
+
+body.theme-paper .chord-guess-feedback .next-chord-hint {
+  color: var(--ink-faded);
+  font-style: normal;
+}
+
+/* --- Name-the-note prompt ---------------------------------- */
+body.theme-paper .name-note-prompt {
+  color: var(--ink-graphite);
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
 /* end body.theme-paper */
