@@ -5,20 +5,19 @@
 
   <div class="find-note-feedback {{ 'correct' if correct else 'incorrect' }}" aria-live="polite">
     {% if correct %}
-      <span class="answer-feedback feedback-stamp feedback-stamp--correct">✓ Correct: {{ target_note.value }} at fret {{ clicked_fret }}</span>
+      <span class="answer-feedback feedback-stamp feedback-stamp--correct">✓ Correct: {{ target_note.value }} at fret {{ clicked_fret }}{% if elapsed_ms is not none %} <span class="answer-feedback-time">in {{ "%.1f"|format(elapsed_ms / 1000) }}s</span>{% endif %}</span>
       <span class="next-chord-hint">Next question coming up…</span>
       <a class="new-chord" href="/exercises/find-note">Next question</a>
       <script>
         (function () {
-          if (window.GuitarExercises && typeof window.GuitarExercises.advanceTo === 'function') {
-            const fallback = document.currentScript.previousElementSibling;
-            if (fallback) fallback.hidden = true;
-            window.GuitarExercises.advanceTo('/exercises/find-note');
+          const g = window.GuitarExercises;
+          if (g && typeof g.handleCorrectAdvance === 'function') {
+            g.handleCorrectAdvance(document.currentScript, '/exercises/find-note');
           }
         })();
       </script>
     {% else %}
-      <span class="answer-feedback feedback-stamp feedback-stamp--incorrect">✗ You clicked fret {{ clicked_fret }} ({{ user_note }}) — {{ target_note.value }} is at fret {% for f in correct_frets %}{{ f }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+      <span class="answer-feedback feedback-stamp feedback-stamp--incorrect">✗ You clicked fret {{ clicked_fret }} ({{ user_note }}) — {{ target_note.value }} is at fret {% for f in correct_frets %}{{ f }}{% if not loop.last %}, {% endif %}{% endfor %}{% if elapsed_ms is not none %} <span class="answer-feedback-time">in {{ "%.1f"|format(elapsed_ms / 1000) }}s</span>{% endif %}</span>
       <a class="new-chord" href="/exercises/find-note">New question</a>
     {% endif %}
   </div>

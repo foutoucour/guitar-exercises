@@ -5,4 +5,7 @@
   {% else %}
     <span class="answer-feedback">✗ You said {{ guess }} — the note is {{ expected_note }}</span>
   {% endif %}
+  {% if elapsed_ms is not none %}
+    <span class="answer-feedback-time">in {{ "%.1f"|format(elapsed_ms / 1000) }}s</span>
+  {% endif %}
 </li>
