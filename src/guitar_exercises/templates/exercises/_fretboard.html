@@ -17,6 +17,15 @@
      highlight:   highlighted_fret (the single fret the system points at).
 #}
 {% set mode = mode | default('interactive') %}
+{# SVG filter for paper-theme hand-drawn feel (zero-size; activated via CSS body.theme-paper only) #}
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="paper-jitter" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="2" seed="5" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 <div class="fretboard fretboard-mode-{{ mode }}"
      role="group"
      aria-label="{{ aria_label | default('Fretboard') }}">

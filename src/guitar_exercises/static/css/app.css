@@ -1027,3 +1027,329 @@ button.fretboard-cell:active {
   color: var(--md-sys-color-on-surface);
   text-align: center;
 }
+
+/* =========================================================
+   Paper-and-ink theme — scoped to body.theme-paper
+   Prototype applied to find_note only; ready for full rollout.
+   All rules below are non-destructive — M3 pages are untouched.
+   ========================================================= */
+
+/* --- Design tokens ---------------------------------------- */
+body.theme-paper {
+  /* Palette */
+  --ink-paper:      #faf6ed;
+  --ink-paper-deep: #f0e9d6;
+  --ink-rule:       rgba(180, 150, 100, 0.22);
+  --ink-graphite:   #1a1a1a;
+  --ink-pencil:     #4a4a4a;
+  /* #6a6450 = 5.48:1 on ink-paper — passes 4.5:1 for small text */
+  --ink-faded:      #6a6450;
+  --ink-red:        #b8342a;
+  --ink-green:      #2f6b3a;
+  --ink-blue:       #1d4e89;
+  --ink-blue-soft:  #d8e3f0;
+
+  /* Typescale overrides */
+  --ink-font-body: 400 0.875rem/1.4rem "Space Grotesk", system-ui, sans-serif;
+  --ink-font-title: 700 1.1rem/1.4rem "Space Grotesk", system-ui, sans-serif;
+  --ink-font-hand: "Caveat", cursive;
+
+  /* --- Body surface: base gradient + SVG paper grain ---
+     Layer order (top → bottom):
+       1. Paper grain — feTurbulence SVG data-URI, multiply blend
+       2. Base cream gradient (paper-deep → paper)
+     background-color provides the ultimate fallback. */
+  background-color: var(--ink-paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--ink-paper-deep) 0%, var(--ink-paper) 60%);
+  background-blend-mode: multiply, normal;
+  background-size: 200px 200px, 100% 100%;
+  color: var(--ink-graphite);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  -webkit-font-smoothing: auto;
+}
+
+/* Focus ring — blue ink instead of gold */
+body.theme-paper :focus-visible {
+  outline-color: var(--ink-blue);
+}
+
+/* --- Topbar & footer -------------------------------------- */
+body.theme-paper .topbar {
+  border-bottom-color: var(--ink-rule);
+}
+
+body.theme-paper .topbar-brand {
+  color: var(--ink-graphite);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+body.theme-paper .topbar-brand::before {
+  color: var(--ink-blue);
+}
+
+body.theme-paper .topbar-brand:hover {
+  color: var(--ink-blue);
+}
+
+body.theme-paper .topbar-brand:focus-visible {
+  outline-color: var(--ink-blue);
+}
+
+body.theme-paper .sitefoot {
+  border-top-color: var(--ink-rule);
+  color: var(--ink-faded);
+}
+
+/* --- Exercise header -------------------------------------- */
+/* Eyebrow: Caveat handwritten label — use case 1 of 3 */
+body.theme-paper .exercise-eyebrow {
+  font-family: var(--ink-font-hand);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-faded);
+}
+
+body.theme-paper .chord-name {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--ink-graphite);
+  text-shadow: none;
+}
+
+body.theme-paper .find-note-target {
+  color: var(--ink-blue);
+  font-style: normal;
+}
+
+/* --- Fretboard -------------------------------------------- */
+body.theme-paper .fretboard {
+  background: linear-gradient(180deg, #d4b88a 0%, #c4a070 100%);
+  border-color: var(--ink-rule);
+  box-shadow: 0 2px 8px rgba(80, 50, 10, 0.18);
+  /* Hand-drawn feel via displacement filter — see inline SVG in _fretboard.html */
+  filter: url(#paper-jitter);
+}
+
+body.theme-paper .fretboard-fret-label {
+  color: var(--ink-faded);
+  opacity: 1;
+}
+
+body.theme-paper .fretboard-string-label {
+  background: var(--ink-paper-deep);
+  border-right-color: var(--ink-graphite);
+  color: var(--ink-pencil);
+}
+
+body.theme-paper .fretboard-string-num {
+  color: var(--ink-pencil);
+}
+
+body.theme-paper .fretboard-string-open {
+  color: var(--ink-blue);
+}
+
+body.theme-paper .fretboard-string-label-target {
+  background: var(--ink-blue-soft);
+}
+
+body.theme-paper .fretboard-string-label-target .fretboard-string-num,
+body.theme-paper .fretboard-string-label-target .fretboard-string-open {
+  color: var(--ink-blue);
+}
+
+body.theme-paper .fretboard-cell {
+  border-left-color: rgba(120, 80, 30, 0.35);
+  color: var(--ink-pencil);
+}
+
+/* String line — warm sepia tone */
+body.theme-paper .fretboard-cell::before {
+  background: rgba(120, 80, 30, 0.5);
+}
+
+body.theme-paper .fretboard-cell-open {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Nut: heavy graphite bar instead of gold */
+body.theme-paper .fretboard-cell-nut {
+  border-left-color: var(--ink-graphite);
+}
+
+body.theme-paper .fretboard-cell-target {
+  background: rgba(29, 78, 137, 0.08);
+}
+
+body.theme-paper .fretboard-cell-target.fretboard-cell-open {
+  background: rgba(29, 78, 137, 0.14);
+}
+
+/* Interactive buttons on target string */
+body.theme-paper button.fretboard-cell {
+  color: var(--ink-pencil);
+}
+
+body.theme-paper button.fretboard-cell .fretboard-cell-fret-num {
+  color: var(--ink-pencil);
+  opacity: 0.5;
+}
+
+body.theme-paper button.fretboard-cell:hover {
+  background: var(--ink-blue-soft);
+}
+
+body.theme-paper button.fretboard-cell:hover .fretboard-cell-fret-num {
+  color: var(--ink-blue);
+  opacity: 1;
+}
+
+body.theme-paper button.fretboard-cell:focus-visible {
+  outline: none;
+  background: var(--ink-blue-soft);
+  box-shadow: inset 0 0 0 2px var(--ink-blue);
+}
+
+body.theme-paper button.fretboard-cell:focus-visible .fretboard-cell-fret-num {
+  color: var(--ink-blue);
+  opacity: 1;
+}
+
+body.theme-paper button.fretboard-cell:active {
+  background: rgba(29, 78, 137, 0.2);
+}
+
+/* Correct cell — ink stamp: light bg so glyph has contrast surface (5.28:1) */
+body.theme-paper .fretboard-cell-clicked-correct {
+  background: var(--ink-paper-deep);
+}
+
+/* Stamp glyph — Caveat font with green circle border: use case 2 of 3 */
+body.theme-paper .fretboard-cell-clicked-correct .fretboard-cell-mark {
+  font-family: var(--ink-font-hand);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-green);
+  border: 1.5px solid var(--ink-green);
+  border-radius: 50%;
+  padding: 1px 4px;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Wrong cell — red ballpoint scrawl: light bg, rotated glyph */
+body.theme-paper .fretboard-cell-clicked-wrong {
+  background: var(--ink-paper-deep);
+}
+
+/* Scrawl glyph — Caveat font, rotated for hand-scrawled feel; glyph + rotation = two cues */
+body.theme-paper .fretboard-cell-clicked-wrong .fretboard-cell-mark {
+  font-family: var(--ink-font-hand);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-red);
+  display: inline-block;
+  transform: rotate(-8deg);
+}
+
+/* Reveal cell — pencil dot in ink-blue */
+body.theme-paper .fretboard-cell-reveal {
+  background: transparent;
+}
+
+body.theme-paper .fretboard-cell-reveal .fretboard-cell-mark {
+  color: var(--ink-blue);
+  opacity: 0.65;
+  font-size: 0.6rem;
+}
+
+/* Inlay dots */
+body.theme-paper .fretboard-dot {
+  background: rgba(80, 50, 20, 0.4);
+  opacity: 1;
+}
+
+/* --- Feedback banner -------------------------------------- */
+body.theme-paper .find-note-feedback {
+  background: var(--ink-paper-deep);
+  border-color: var(--ink-rule);
+  box-shadow: none;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+body.theme-paper .find-note-feedback.correct {
+  background: #e8f0e8;
+  border-color: var(--ink-green);
+}
+
+body.theme-paper .find-note-feedback.incorrect {
+  background: #f5e8e8;
+  border-color: var(--ink-red);
+}
+
+/* Feedback text — Caveat handwritten: use case 3 of 3 */
+body.theme-paper .find-note-feedback .answer-feedback {
+  font-family: var(--ink-font-hand);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+body.theme-paper .find-note-feedback.correct .answer-feedback {
+  color: var(--ink-green);
+}
+
+body.theme-paper .find-note-feedback.incorrect .answer-feedback {
+  color: var(--ink-red);
+}
+
+body.theme-paper .find-note-feedback .next-chord-hint {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: var(--ink-faded);
+  font-style: normal;
+}
+
+/* --- Next-question button — ink-blue instead of teal ------ */
+body.theme-paper .new-chord {
+  background: var(--ink-blue);
+  color: var(--ink-paper);
+  box-shadow: none;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+}
+
+body.theme-paper .new-chord:hover {
+  box-shadow: 0 2px 6px rgba(29, 78, 137, 0.3);
+}
+
+body.theme-paper .new-chord:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(29, 78, 137, 0.35);
+}
+
+/* Feedback banner stamp styles — glyph + stroke treatment (not colour alone) */
+body.theme-paper .feedback-stamp--correct {
+  /* Green ink-stamp circle around the ✓ text (border applied to the inline span) */
+  display: inline-block;
+  border: 1.5px solid var(--ink-green);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+body.theme-paper .feedback-stamp--incorrect {
+  /* Red ballpoint underline — wavy underline as stroke treatment distinct from colour */
+  text-decoration: underline wavy var(--ink-red);
+  text-underline-offset: 3px;
+}
+
+/* end body.theme-paper */
